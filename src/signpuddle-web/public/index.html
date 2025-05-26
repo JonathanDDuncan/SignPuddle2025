@@ -1,0 +1,26 @@
+SignPuddle2\signpuddle-web\public\index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>SignPuddle 2</title>
+  
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="stylesheet" href="/global.css">
+  <link rel="stylesheet" href="/build/bundle.css">
+  
+  <!-- SignWriting font support -->
+  <link href="https://cdn.jsdelivr.net/npm/sutton-signwriting@1.4.0/font/font.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sutton-signwriting@1.4.0/dist/js/sw10.min.js"></script>
+  
+  <script defer src="/build/bundle.js"></script>
+  <script>
+      window.env = { API_URL: 'https://localhost:60317/api' };
+  </script>
+</head>
+
+<body>
+</body>
+</html>

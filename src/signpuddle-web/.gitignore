@@ -1,0 +1,47 @@
+# Node.js dependencies
+node_modules/
+
+# Build output
+public/build/
+dist/
+build/
+
+# Local env files
+.env
+.env.*
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Coverage directory used by testing tools
+coverage/
+
+# Optional: SvelteKit-specific (if used)
+.svelte-kit/
+
+# Optional: Vite cache
+.vite/
+
+# Optional: TypeScript cache
+*.tsbuildinfo
+
+# Optional: macOS metadata
+.AppleDouble
+.LSOverride
+
+# Optional: local SSL certs
+*.pem
+*.key
+*.crt
