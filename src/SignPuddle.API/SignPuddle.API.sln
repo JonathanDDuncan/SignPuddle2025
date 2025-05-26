@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignPuddle.API", "SignPuddle.API.csproj", "{547C9EE4-1C2D-4679-8DAC-30D8CBABCDB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignPuddle.API.E2ETests", "..\SignPuddle.API.E2ETests\SignPuddle.API.E2ETests.csproj", "{6069B937-391C-423B-B137-15892C73F252}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{547C9EE4-1C2D-4679-8DAC-30D8CBABCDB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{547C9EE4-1C2D-4679-8DAC-30D8CBABCDB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{547C9EE4-1C2D-4679-8DAC-30D8CBABCDB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6069B937-391C-423B-B137-15892C73F252}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6069B937-391C-423B-B137-15892C73F252}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6069B937-391C-423B-B137-15892C73F252}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6069B937-391C-423B-B137-15892C73F252}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
