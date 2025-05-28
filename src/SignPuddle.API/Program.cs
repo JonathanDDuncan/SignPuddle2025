@@ -1,12 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using SignPuddle.API.Data;
 using SignPuddle.API.Services;
- 
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddControllers();
+
+// Add health checks
+builder.Services.AddHealthChecks();
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -49,6 +56,29 @@ app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
 app.UseAuthorization();
 app.MapControllers();
+
+// Configure health checks
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        var response = new
+        {
+            status = report.Status.ToString(),
+            checks = report.Entries.Select(e => new
+            {
+                name = e.Key,
+                status = e.Value.Status.ToString(),
+                description = e.Value.Description
+            })
+        };
+
+        // Use synchronous serialization instead of async
+        var jsonString = JsonSerializer.Serialize(response);
+        return context.Response.WriteAsync(jsonString);
+    }
+});
 
 app.Run();
 
