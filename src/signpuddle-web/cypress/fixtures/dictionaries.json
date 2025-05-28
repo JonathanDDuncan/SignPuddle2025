@@ -1,0 +1,20 @@
+{
+  "dictionaries": [
+    {
+      "id": 1,
+      "name": "ASL Dictionary",
+      "description": "American Sign Language signs",
+      "language": "ase",
+      "signCount": 1500,
+      "public": true
+    },
+    {
+      "id": 2,
+      "name": "My Personal Dictionary",
+      "description": "Personal collection of signs",
+      "language": "ase",
+      "signCount": 25,
+      "public": false
+    }
+  ]
+}

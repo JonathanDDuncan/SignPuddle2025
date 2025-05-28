@@ -1,0 +1,36 @@
+{
+  "symbols": [
+    {
+      "key": "S10000",
+      "category": "hand",
+      "group": "hands",
+      "fill": 1,
+      "rotation": 0,
+      "name": "index straight",
+      "svg": "<svg>...</svg>"
+    },
+    {
+      "key": "S20000",
+      "category": "hand",
+      "group": "hands", 
+      "fill": 1,
+      "rotation": 0,
+      "name": "flat hand",
+      "svg": "<svg>...</svg>"
+    },
+    {
+      "key": "S26500",
+      "category": "movement",
+      "group": "movement",
+      "fill": 1,
+      "rotation": 0,
+      "name": "curve movement",
+      "svg": "<svg>...</svg>"
+    }
+  ],
+  "categories": [
+    { "id": "hand", "name": "Hands", "count": 652 },
+    { "id": "movement", "name": "Movement", "count": 245 },
+    { "id": "contact", "name": "Contact", "count": 89 }
+  ]
+}

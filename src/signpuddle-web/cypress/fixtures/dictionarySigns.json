@@ -1,0 +1,24 @@
+{
+  "signs": [
+    {
+      "id": 1,
+      "term": "Hello",
+      "definition": "A greeting",
+      "fsw": "AS10000S26500M525x535S10000492x467S26500508x534",
+      "category": "greetings"
+    },
+    {
+      "id": 2,
+      "term": "Goodbye",
+      "definition": "A farewell",
+      "fsw": "AS20000S30000M525x535S20000492x467S30000508x534",
+      "category": "greetings"
+    }
+  ],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 5,
+    "totalSigns": 50,
+    "pageSize": 10
+  }
+}

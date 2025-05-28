@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "id": 123,
+  "message": "Sign saved successfully",
+  "sign": {
+    "id": 123,
+    "term": "Test Sign",
+    "definition": "A test sign",
+    "fsw": "AS10000M525x535S10000492x467",
+    "created": "2025-05-26T12:00:00Z"
+  }
+}

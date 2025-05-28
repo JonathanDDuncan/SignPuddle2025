@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "signId": "12345",
+  "message": "Sign updated successfully",
+  "timestamp": "2025-05-26T12:00:00Z",
+  "data": {
+    "fsw": "M500x500S10000482x496S2ff00506x483",
+    "gloss": "EXAMPLE",
+    "definition": "An example sign for testing"
+  }
+}

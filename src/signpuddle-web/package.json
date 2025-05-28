@@ -3,23 +3,35 @@
   "version": "1.0.0",
   "private": true,
   "description": "SignPuddle 2 Web Client",
+  "type": "module",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public --single"
+    "start": "sirv public --single",
+    "preview": "vite preview",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test:e2e": "start-server-and-test dev https://localhost:5000 cypress:run",
+    "test:e2e:open": "start-server-and-test dev https//localhost:5000 cypress:open"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
+    "@sveltejs/vite-plugin-svelte": "^2.4.2",
+    "cypress": "^13.6.0",
     "rollup": "^2.3.4",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
-    "svelte": "^3.49.0"
+    "start-server-and-test": "^2.0.3",
+    "svelte": "^3.49.0",
+    "vite": "^4.4.5"
   },
   "dependencies": {
     "sirv-cli": "^1.0.0",
-    "svelte-routing": "^1.6.0"
+    "svelte-routing": "^1.11.0"
   }
 }
