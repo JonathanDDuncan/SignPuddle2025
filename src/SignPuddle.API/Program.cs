@@ -7,26 +7,32 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
 using Microsoft.AspNetCore.Http.Json;
+using System.Text.Json.Serialization.Metadata;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllers(options =>
-{
-    // Suppress output formatter buffering to avoid PipeWriter issues in tests
-    options.SuppressOutputFormatterBuffering = true;
-});
-// Don't clear TypeInfoResolverChain here - it breaks deserialization
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Disable source-gen: clears any generated TypeInfoResolvers
+        options.JsonSerializerOptions.TypeInfoResolverChain.Clear();
 
-// Configure JSON options for minimal APIs only (not MVC controllers)
-builder.Services.Configure<JsonOptions>(options =>
+        // Replaces source-gen with reflection-based serialization
+        options.JsonSerializerOptions.TypeInfoResolverChain.Add(new DefaultJsonTypeInfoResolver());
+
+        // Optional: camelCase
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
+builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
-    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    options.SuppressMapClientErrors = true; // avoids using ProblemDetails for 404/etc.
 });
 
 // Add health checks
 builder.Services.AddHealthChecks();
-
+builder.Services.AddProblemDetails();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -72,37 +78,17 @@ else
 }
 
 // Global exception handler endpoint
-app.Map("/error", async (HttpContext context, ILogger<Program> logger) =>
+app.UseExceptionHandler("/error");
+
+app.Map("/error", (HttpContext context) =>
 {
-    var exceptionFeature = context.Features.Get<IExceptionHandlerFeature>();
-    var exception = exceptionFeature?.Error;
-
-    // Log the exception with more details
-    logger.LogError(exception, "Unhandled exception occurred. Path: {Path}, Method: {Method}", 
-        context.Request.Path, context.Request.Method);
-
-    var response = new
+    var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+    return Results.Json(new
     {
-        error = "An error occurred while processing your request.",
-        message = app.Environment.IsDevelopment() ? exception?.Message : "Internal server error",
+        error = exception?.Message,
         type = exception?.GetType().Name,
-        timestamp = DateTime.UtcNow,
-        // Include request path in development for debugging
-        path = app.Environment.IsDevelopment() ? context.Request.Path.ToString() : null
-    };
-
-    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-    context.Response.ContentType = "application/json";
-
-    // Create a fresh JsonSerializerOptions instance to avoid PipeWriter issues
-    var options = new JsonSerializerOptions
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
-    };
-
-    // Use Stream-based serialization to avoid PipeWriter issues
-    await JsonSerializer.SerializeAsync(context.Response.Body, response, options);
+        stack = exception?.StackTrace
+    });
 });
 
 // Configure health checks
