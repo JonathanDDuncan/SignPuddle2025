@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SignPuddle.API.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -32,13 +33,21 @@ namespace SignPuddle.API.Controllers
             // For test purposes, return 404 for id 999
             if (id == 999)
             {
-                return NotFound();
+                return new ContentResult
+                {
+                    ContentType = "application/json",
+                    StatusCode = 404
+                };
             }
             
             var user = _users.FirstOrDefault(u => u.Id == id);
             if (user == null)
-                return NotFound();
-            
+                return new ContentResult
+                {
+                    ContentType = "application/json",
+                    StatusCode = 404
+                };
+
             return new ContentResult
             {
                 Content = JsonSerializer.Serialize(user),

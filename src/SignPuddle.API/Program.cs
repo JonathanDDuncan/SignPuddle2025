@@ -4,11 +4,25 @@ using SignPuddle.API.Services;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using System.Text.Json;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Net;
+using Microsoft.AspNetCore.Http.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    // Suppress output formatter buffering to avoid PipeWriter issues in tests
+    options.SuppressOutputFormatterBuffering = true;
+});
+// Don't clear TypeInfoResolverChain here - it breaks deserialization
+
+// Configure JSON options for minimal APIs only (not MVC controllers)
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+});
 
 // Add health checks
 builder.Services.AddHealthChecks();
@@ -51,16 +65,50 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    // Add global exception handler for production
+    app.UseExceptionHandler("/error");
+}
 
-app.UseHttpsRedirection();
-app.UseCors("CorsPolicy");
-app.UseAuthorization();
-app.MapControllers();
+// Global exception handler endpoint
+app.Map("/error", async (HttpContext context, ILogger<Program> logger) =>
+{
+    var exceptionFeature = context.Features.Get<IExceptionHandlerFeature>();
+    var exception = exceptionFeature?.Error;
+
+    // Log the exception with more details
+    logger.LogError(exception, "Unhandled exception occurred. Path: {Path}, Method: {Method}", 
+        context.Request.Path, context.Request.Method);
+
+    var response = new
+    {
+        error = "An error occurred while processing your request.",
+        message = app.Environment.IsDevelopment() ? exception?.Message : "Internal server error",
+        type = exception?.GetType().Name,
+        timestamp = DateTime.UtcNow,
+        // Include request path in development for debugging
+        path = app.Environment.IsDevelopment() ? context.Request.Path.ToString() : null
+    };
+
+    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+    context.Response.ContentType = "application/json";
+
+    // Create a fresh JsonSerializerOptions instance to avoid PipeWriter issues
+    var options = new JsonSerializerOptions
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+    };
+
+    // Use Stream-based serialization to avoid PipeWriter issues
+    await JsonSerializer.SerializeAsync(context.Response.Body, response, options);
+});
 
 // Configure health checks
 app.MapHealthChecks("/health", new HealthCheckOptions
 {
-    ResponseWriter = (context, report) =>
+    ResponseWriter = async (context, report) =>
     {
         context.Response.ContentType = "application/json";
         var response = new
@@ -74,11 +122,24 @@ app.MapHealthChecks("/health", new HealthCheckOptions
             })
         };
 
-        // Use synchronous serialization instead of async
-        var jsonString = JsonSerializer.Serialize(response);
-        return context.Response.WriteAsync(jsonString);
+        // Use Stream-based serialization to avoid PipeWriter issues
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        await JsonSerializer.SerializeAsync(context.Response.Body, response, options);
     }
 });
+
+// Only use HTTPS redirection when not in testing environment
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    app.UseHttpsRedirection();
+}
+
+app.UseCors("CorsPolicy");
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
 

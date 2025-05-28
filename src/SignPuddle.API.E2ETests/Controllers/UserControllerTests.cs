@@ -25,8 +25,12 @@ namespace SignPuddle.API.E2ETests.Controllers
             // Act
             var response = await _client.GetAsync($"/api/users/{userId}");
 
-            // Assert - Either NotFound (if endpoint exists) or NotFound (if endpoint doesn't exist)
-            Assert.True(response.StatusCode == HttpStatusCode.NotFound);
+            // Debug output to see what's actually happening
+            var responseContent = await response.Content.ReadAsStringAsync(); 
+            
+            // Assert - Should return NotFound (404)
+            Assert.True(response.StatusCode == HttpStatusCode.NotFound, 
+                $"Expected 404 NotFound, but got {response.StatusCode}. Response: {responseContent}");
         }
 
         [Fact]

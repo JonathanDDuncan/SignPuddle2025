@@ -39,7 +39,12 @@ namespace SignPuddle.API.Controllers
 
             var sign = _signs.FirstOrDefault(s => s.Id == id);
             if (sign == null)
-                return NotFound();
+                return new ContentResult
+            {
+               
+                ContentType = "application/json",
+                StatusCode = 404
+            };
             
             return new ContentResult
             {
