@@ -124,7 +124,7 @@ Svelte Frontend Structure:
         ○ signRender.js: Client-side rendering using modern libraries
 This architecture would leverage modern web technology like the Sutton SignWriting JavaScript Library (sw10js) and Web Components (sgnw-components) for rendering, while providing a clean separation of concerns between frontend and backend.
 
-There is a folder "SignPuddleNext"with two subfolders in it.  "SignPuddle.API" for the C# API and "signpuddle-web" for the Svelte 3 static website. 
+There is a folder "src" with two subfolders in it.  "SignPuddle.API" for the C# API and "signpuddle-web" for the Svelte 3 static website. 
 
 Write all the code for the static website.
 
