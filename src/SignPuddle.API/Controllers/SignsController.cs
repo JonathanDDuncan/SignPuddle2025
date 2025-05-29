@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.SqlServer.Server;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -14,18 +15,13 @@ namespace SignPuddle.API.Controllers
             new Sign { Id = 1, Content = "ASL:hello", Description = "Hello in ASL" },
             new Sign { Id = 2, Content = "ASL:thank-you", Description = "Thank you in ASL" }
         };
-        
+
         private static List<Sign> _signs = new List<Sign>(_initialSigns);
 
         [HttpGet]
         public IActionResult GetSigns()
         {
-            return new ContentResult
-            {
-                Content = JsonSerializer.Serialize(_signs),
-                ContentType = "application/json",
-                StatusCode = 200
-            };
+            return Ok((string?)JsonSerializer.Serialize(_signs));
         }
 
         [HttpGet("{id}")]
@@ -39,19 +35,9 @@ namespace SignPuddle.API.Controllers
 
             var sign = _signs.FirstOrDefault(s => s.Id == id);
             if (sign == null)
-                return new ContentResult
-            {
-               
-                ContentType = "application/json",
-                StatusCode = 404
-            };
-            
-            return new ContentResult
-            {
-                Content = JsonSerializer.Serialize(sign),
-                ContentType = "application/json",
-                StatusCode = 200
-            };
+                return NotFound();
+            return Ok((string?)JsonSerializer.Serialize(sign));
+
         }
 
         [HttpPost]
@@ -65,14 +51,10 @@ namespace SignPuddle.API.Controllers
             };
 
             _signs.Add(newSign);
-            
+
             Response.Headers.Add("Location", $"/api/signs/{newSign.Id}");
-            return new ContentResult
-            {
-                Content = JsonSerializer.Serialize(newSign),
-                ContentType = "application/json",
-                StatusCode = 201 // Created
-            };
+
+            return CreatedAtAction(nameof(GetSign), new { id = newSign.Id }, (string?)JsonSerializer.Serialize(newSign));
         }
 
         [HttpDelete("{id}")]
@@ -81,18 +63,18 @@ namespace SignPuddle.API.Controllers
             var sign = _signs.FirstOrDefault(s => s.Id == id);
             if (sign == null)
                 return NotFound();
-            
+
             _signs.Remove(sign);
-            
+
             // Reset data after a successful delete to ensure subsequent tests have data
             if (id == 1)
             {
                 ResetSignData();
             }
-            
+
             return NoContent();
         }
-        
+
         // Helper method to reset sign data
         private static void ResetSignData()
         {

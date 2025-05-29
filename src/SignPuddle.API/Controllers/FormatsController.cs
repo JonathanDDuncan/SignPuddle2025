@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.SqlServer.Server;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -18,12 +19,7 @@ namespace SignPuddle.API.Controllers
         [HttpGet]
         public IActionResult GetFormats()
         {
-            return new ContentResult
-            {
-                Content = JsonSerializer.Serialize(_formats),
-                ContentType = "application/json",
-                StatusCode = 200
-            };
+            return Ok((string?)JsonSerializer.Serialize(_formats));
         }
 
         [HttpGet("{id}")]
@@ -32,13 +28,8 @@ namespace SignPuddle.API.Controllers
             var format = _formats.FirstOrDefault(f => f.Id == id);
             if (format == null)
                 return NotFound();
-            
-            return new ContentResult
-            {
-                Content = JsonSerializer.Serialize(format),
-                ContentType = "application/json",
-                StatusCode = 200
-            };
+
+            return Ok((string?)JsonSerializer.Serialize(format));
         }
 
         [HttpPost]
@@ -52,14 +43,10 @@ namespace SignPuddle.API.Controllers
             };
 
             _formats.Add(newFormat);
-            
+
             Response.Headers.Add("Location", $"/api/formats/{newFormat.Id}");
-            return new ContentResult
-            {
-                Content = JsonSerializer.Serialize(newFormat),
-                ContentType = "application/json",
-                StatusCode = 201 // Created
-            };
+
+            return CreatedAtAction(nameof(GetFormat), new { id = newFormat.Id }, (string?)JsonSerializer.Serialize(newFormat));
         }
     }
 

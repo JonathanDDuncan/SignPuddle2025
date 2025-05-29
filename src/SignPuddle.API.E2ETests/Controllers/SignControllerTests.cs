@@ -6,7 +6,7 @@ using Xunit;
 
 namespace SignPuddle.API.E2ETests.Controllers
 {
-    
+
     public class SignControllerTests : IClassFixture<TestWebApplicationFactory<Program>>
     {
         private readonly HttpClient _client;

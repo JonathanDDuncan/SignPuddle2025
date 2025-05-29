@@ -1,30 +1,28 @@
+﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using SignPuddle.API.Data;
 using SignPuddle.API.Services;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using System.Text.Json;
-using Microsoft.AspNetCore.Diagnostics;
-using System.Net;
-using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization.Metadata;
-using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+builder.Services.AddControllers(options =>
+{
+    options.OutputFormatters.RemoveType<SystemTextJsonOutputFormatter>();
+
+    var jsonOptions = new JsonSerializerOptions
     {
-        // Disable source-gen: clears any generated TypeInfoResolvers
-        options.JsonSerializerOptions.TypeInfoResolverChain.Clear();
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        TypeInfoResolver = new DefaultJsonTypeInfoResolver()
+    };
 
-        // Replaces source-gen with reflection-based serialization
-        options.JsonSerializerOptions.TypeInfoResolverChain.Add(new DefaultJsonTypeInfoResolver());
-
-        // Optional: camelCase
-        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-    });
+    options.OutputFormatters.Add(new SystemTextJsonOutputFormatter(jsonOptions));
+});
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressMapClientErrors = true; // avoids using ProblemDetails for 404/etc.

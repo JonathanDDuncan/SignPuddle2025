@@ -26,10 +26,10 @@ namespace SignPuddle.API.E2ETests.Controllers
             var response = await _client.GetAsync($"/api/users/{userId}");
 
             // Debug output to see what's actually happening
-            var responseContent = await response.Content.ReadAsStringAsync(); 
-            
+            var responseContent = await response.Content.ReadAsStringAsync();
+
             // Assert - Should return NotFound (404)
-            Assert.True(response.StatusCode == HttpStatusCode.NotFound, 
+            Assert.True(response.StatusCode == HttpStatusCode.NotFound,
                 $"Expected 404 NotFound, but got {response.StatusCode}. Response: {responseContent}");
         }
 
@@ -56,7 +56,7 @@ namespace SignPuddle.API.E2ETests.Controllers
 
             // Assert - Check that we get a meaningful response (not MethodNotAllowed)
             Assert.NotEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-            
+
             // Log the actual response for debugging
             var responseContent = await response.Content.ReadAsStringAsync();
             // In a real test, you might want to output this for debugging

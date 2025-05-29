@@ -45,14 +45,14 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
             // For example:
             // services.RemoveAll<IDbConnection>();
             // services.AddScoped<IDbConnection>(sp => new TestDbConnection());
-            
+
             // You can also seed test data, configure test databases, etc.
         });
     }
 
     // The CreateHostBuilder method is no longer needed for .NET 6+ projects
     // as WebApplicationFactory handles the Program.Main directly
-    
+
     // Optionally add helper methods for your tests
     public HttpClient CreateAuthenticatedClient(string userId = "test-user")
     {

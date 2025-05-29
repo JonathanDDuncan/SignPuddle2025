@@ -21,7 +21,7 @@ namespace SignPuddle.API.E2ETests.Controllers
             var requestUri = "/api/render"; // Adjust the endpoint as necessary
 
             // Act
-            var response = await _client.GetAsync(requestUri); 
+            var response = await _client.GetAsync(requestUri);
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299

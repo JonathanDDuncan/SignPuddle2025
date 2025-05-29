@@ -23,12 +23,7 @@ namespace SignPuddle.API.Controllers
             };
 
             // Return a ContentResult instead of using Ok() to avoid serialization issues
-            return new ContentResult
-            {
-                Content = JsonSerializer.Serialize(renderResponse),
-                ContentType = "application/json",
-                StatusCode = 200
-            };
+            return Ok((string?)JsonSerializer.Serialize(renderResponse));
         }
     }
 }
