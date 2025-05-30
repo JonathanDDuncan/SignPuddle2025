@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using System.IO;
 using System.Net.Http;
@@ -9,15 +10,35 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Cosmos;
+using Microsoft.EntityFrameworkCore;
+using SignPuddle.API.Data;
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 
 public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
 {
+    // Test database name - will be created and deleted for each test run
+    private readonly string _testDatabaseName = $"SignPuddle-Test-{Guid.NewGuid()}";
+    
+    // CosmosDB Emulator connection string
+    private const string EmulatorConnectionString =
+        "AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureAppConfiguration((context, configBuilder) =>
         {
             configBuilder.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.Test.json"), optional: true);
             configBuilder.AddEnvironmentVariables();
+
+            // Override with test configuration
+            configBuilder.AddInMemoryCollection(new Dictionary<string, string>
+            {
+                ["ConnectionStrings:CosmosDb"] = EmulatorConnectionString,
+                ["CosmosDb:DatabaseName"] = _testDatabaseName
+            });
         });
 
         builder.ConfigureServices(services =>
@@ -41,17 +62,61 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
 
         builder.ConfigureTestServices(services =>
         {
-            // Register test services or replace existing services with test doubles
-            // For example:
-            // services.RemoveAll<IDbConnection>();
-            // services.AddScoped<IDbConnection>(sp => new TestDbConnection());
+            // Remove the production CosmosDB registration
+            services.RemoveAll<CosmosClient>();
+            services.RemoveAll<ApplicationDbContext>();
 
-            // You can also seed test data, configure test databases, etc.
+            // Retrieve the connection string from configuration
+            var cosmosConnectionString = builder.GetSetting("ConnectionStrings:CosmosDb");
+            var databaseName = builder.GetSetting("CosmosDb:DatabaseName");
+
+            // Register test CosmosDB client
+            services.AddSingleton(sp =>
+            {
+                var cosmosClientOptions = new CosmosClientOptions
+                {
+                    ConnectionMode = ConnectionMode.Direct,
+                    SerializerOptions = new CosmosSerializationOptions
+                    {
+                        PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
+                    }
+                };
+
+                return new CosmosClient(cosmosConnectionString, cosmosClientOptions);
+            });
+
+            // Register test DbContext
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseCosmos(
+                    connectionString: cosmosConnectionString,
+                    databaseName: databaseName
+                );
+            });
         });
+
+
     }
 
-    // The CreateHostBuilder method is no longer needed for .NET 6+ projects
-    // as WebApplicationFactory handles the Program.Main directly
+    // Clean up test database after tests
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            try
+            {
+                // Delete the test database
+                var client = new CosmosClient(EmulatorConnectionString);
+                client.GetDatabase(_testDatabaseName).DeleteAsync().Wait();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error cleaning up test database: {ex.Message}");
+            }
+        }
+        
+        base.Dispose(disposing);
+    }
 
     // Optionally add helper methods for your tests
     public HttpClient CreateAuthenticatedClient(string userId = "test-user")

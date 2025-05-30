@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using HealthChecks.CosmosDb;
 using SignPuddle.API.Data;
 using SignPuddle.API.Services;
 using System.Text.Json;
@@ -28,8 +31,59 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressMapClientErrors = true; // avoids using ProblemDetails for 404/etc.
 });
 
+// Configure CosmosDB
+string CosmosConnectionString() => builder.Configuration.GetConnectionString("CosmosDb") ?? string.Empty;
+string DatabaseName() => builder.Configuration["CosmosDb:DatabaseName"] ?? "SignPuddle";
+
+// Register CosmosDB client
+builder.Services.AddSingleton(serviceProvider =>
+{
+    return new CosmosClient(CosmosConnectionString());
+});
+
+// Configure DbContext for CosmosDB
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseCosmos(
+        connectionString: CosmosConnectionString(),
+        databaseName: DatabaseName(),
+        cosmosOptionsAction: options =>
+        {
+            options.ConnectionMode(ConnectionMode.Direct);
+            options.MaxRequestsPerTcpConnection(20);
+            options.MaxTcpConnectionsPerEndpoint(32);
+        }
+    ));
+
 // Add health checks
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddCheck("cosmosdb-check", () =>
+    {
+        try
+        {
+            HealthCheckResult? result = null;
+            Task.Run(async () =>
+            {
+                var client = new CosmosClient(CosmosConnectionString());
+                // Use async/await to avoid deadlocks and improve performance
+                await client.ReadAccountAsync();
+                result = HealthCheckResult.Healthy("CosmosDB connection is healthy");
+            }).Wait();
+
+            if (result != null)
+            {
+                return (HealthCheckResult)result;
+            }
+            else
+            {
+                return HealthCheckResult.Unhealthy("CosmosDB health check did not complete successfully");
+            }
+        }
+        catch (Exception ex)
+        {
+            return HealthCheckResult.Unhealthy("CosmosDB connection failed", ex);
+        }
+    }, new[] { "cosmosdb", "database" });
+
 builder.Services.AddProblemDetails();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -56,10 +110,6 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
-
-// Configure DbContext
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 

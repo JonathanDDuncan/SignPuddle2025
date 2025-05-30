@@ -10,7 +10,7 @@ namespace SignPuddle.API.E2ETests.Controllers
     public class UserControllerTests : IClassFixture<TestWebApplicationFactory<Program>>
     {
         private readonly HttpClient _client;
-
+         
         public UserControllerTests(TestWebApplicationFactory<Program> factory)
         {
             _client = factory.CreateClient();
