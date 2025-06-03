@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE spml SYSTEM "http://www.signpuddle.net/spml_1.6.dtd">
+<spml root="http://www.signbank.org/signpuddle1.6" type="sgn" puddle="4" cdt="1203374232" mdt="1311025253" nextid="11237">
+
+  <term><![CDATA[Dictionary US]]></term>
+  <png>iVBORw0KGgoAAAANSUhEUgAAACQAAAA8CAMAAAA5W+hcAAAABGdBTUEAANbY1E9YMgAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAVUExURf/////MzP8AAMzM/wAz/wAzzAAAAEvurKUAAACaSURBVHja7JPbDoAgDEMnYv//k5UI4oSxJj55aQwP5IS2yAS+ZsGiFRrtkEj9OEgadewo6M90J1PwlCDxREOU3bszMXM3T45iTJBn9xUIBAQFoQuBgPI/Ik/KKEaZyoJROyT4JnS1O/ewgqu21hWoDesyu5BQUC2k5sR6KqhkPt+Cas0RVKzFhQaZjshtuwfOXaQgVxtEaBVgAHdLDhoepIuvAAAAAElFTkSuQmCC</png>
+<entry id="1" cdt="1311183542" mdt="1311183729" usr="Val">
+  <term>AS17620S15a18S22a02M523x514S15a18478x487S22a02508x495S17620491x494</term>
+  <term><![CDATA[test zero]]></term>
+  <text><![CDATA[we are testing SignPuddle 1.6]]></text>
+  <video><![CDATA[<iframe width="425" height="349" src="http://www.youtube.com/embed/RTniYA1lTDM" frameborder="0" allowfullscreen></iframe>]]></video>
+  <src><![CDATA[Val ;-)]]></src>
+</entry>
+
+<entry id="2" cdt="1172438870" mdt="1216741367" usr="admin">
+  <term>AS1c500S1c509S31300S20500M541x560S31300482x482S1c500511x477S1c509475x523S20500498x549</term>
+  <term><![CDATA[infirmity]]></term>
+</entry>
+
+<entry id="3" cdt="1172438877" mdt="1218173289" usr="admin">
+  <term>AS1ce40S1ce48S2b800M523x537S1ce40501x507S1ce48478x507S2b800498x462</term>
+  <term><![CDATA[DELAY]]></term>
+  <text><![CDATA[Delay, postpone, move forward in time]]></text>
+  <src><![CDATA[Stuart Thiessen, Des Moines, IA]]></src>
+</entry>
+
+<entry id="4" cdt="1172438885" mdt="1173395738" usr="admin">
+  <term>AS19220S1ce20S1f540S30a00S20e00S26500M531x541S26500517x506S30a00482x482S20e00518x524S1f540493x517S19220482x438S1ce20507x428</term>
+  <term><![CDATA[otherwise]]></term>
+</entry>
+
+<entry id="5" cdt="1172438900" mdt="1173789843" usr="admin">
+  <term>AS14710S20600S30005M528x548S14710510x511S30005482x482S20600506x537</term>
+  <term><![CDATA[name-sign-B]]></term>
+  <src><![CDATA[Valerie Sutton]]></src>
+</entry>
+
+<entry id="6" cdt="1172438908" mdt="1218138041" usr="admin">
+  <term>AS10e10S20600S30a00M529x537S30a00482x482S20600507x526S10e10510x494</term>
+  <term><![CDATA[see]]></term>
+</entry>
+
+<entry id="7" cdt="1172438911" mdt="1218137900" usr="admin">
+  <term>AS11010S11018S26726S2df06S2df1eS2fb00S2df06S2df1eS2fb00S2df06S2df1eS2fb00M577x533S11010455x506S11018424x506S26726496x510S2fb00547x467S2fb00495x468S2fb00440x468S2df06450x477S2df06557x477S2df06504x478S2df1e423x476S2df1e477x477S2df1e530x477</term>
+  <term><![CDATA[issues]]></term>
+  <src><![CDATA[typed with SignWriter Java, taken from the SignBank Database (A Sutton)]]></src>
+</entry>
+
+<entry id="8" cdt="1311464436" mdt="1311464436" usr="174.59.122.20">
+  <term>M522x525S11541498x491S11549479x498S20600489x476</term>
+  <term><![CDATA[name]]></term>
+</entry>
+
+<entry id="9" cdt="1172438912" mdt="1216538097" usr="admin">
+  <term>AS20340S20600S36d00S37700S37802M521x528S36d00479x472S37700479x474S37802479x496S20340486x485S20600453x492</term>
+  <term><![CDATA[drugs]]></term>
+  <src><![CDATA[Philip from Des Moines]]></src>
+</entry>
+
+<entry id="10" cdt="1172438864" mdt="1218224694" usr="admin">
+  <term>AS10012S26506S10612S30000M595x517S30000482x482S10012508x477S26506545x478S10612569x478</term>
+  <term><![CDATA[Summer]]></term>
+  <src><![CDATA[typed with SignWriter Java, taken from the SignBank Database (A Sutton)]]></src>
+</entry>
+</spml>
