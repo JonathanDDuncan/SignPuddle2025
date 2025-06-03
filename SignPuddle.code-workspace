@@ -1,0 +1,81 @@
+{    "folders": [
+        {
+            "name": "SignPuddle Root",
+            "path": "."
+        },
+        {
+            "name": "Documentation",
+            "path": "./docs"
+        },
+        {
+            "name": "PHP Legacy",
+            "path": "./php-legacy"
+        },
+        {
+            "name": "Source Code (All)",
+            "path": "./src"
+        },
+        {
+            "name": "API Main",
+            "path": "./src/SignPuddle.API"
+        },
+        {
+            "name": "API Tests",
+            "path": "./src/SignPuddle.API.Tests"
+        },
+        {
+            "name": "API E2E Tests",
+            "path": "./src/SignPuddle.API.E2ETests"
+        },
+        {
+            "name": "Web Frontend",
+            "path": "./src/signpuddle-web"
+        },
+        {
+            "name": "Prompts",
+            "path": "./_prompts"
+        }
+    ],    "settings": {
+        "files.associations": {
+            "*.php": "php",
+            "*.js": "javascript",
+            "*.ts": "typescript",
+            "*.css": "css",
+            "*.scss": "scss",
+            "*.md": "markdown",
+            "*.spml": "xml",
+            "*.txt": "plaintext",
+            "*.cs": "csharp",
+            "*.csproj": "xml",
+            "*.sln": "text",
+            "*.json": "json",
+            "*.config": "xml"
+        },
+        "search.useIgnoreFiles": false,
+        "files.exclude": {
+            "**/.git": true,
+            "**/bin": true,
+            "**/obj": true,
+            "**/node_modules": true,
+            "**/.vs": true
+        },
+        "search.exclude": {
+            "**/bin": true,
+            "**/obj": true,
+            "**/node_modules": true,
+            "**/.vs": true
+        },
+        "dotnet.defaultSolution": "./src/SignPuddle.API/SignPuddle.API.sln"
+    },    "extensions": {
+        "recommendations": [
+            "ms-dotnettools.csharp",
+            "ms-dotnettools.vscode-dotnet-runtime",
+            "bmewburn.vscode-intelephense-client",
+            "ms-vscode.vscode-typescript-next",
+            "bradlc.vscode-tailwindcss",
+            "esbenp.prettier-vscode",
+            "ms-vscode.test-adapter-converter",
+            "formulahendry.dotnet-test-explorer"
+        ]
+    }
+}
