@@ -1,0 +1,22 @@
+<!ELEMENT spml (term*,text*,png?,svg?,src*,entry*)>
+<!ATTLIST spml root CDATA #IMPLIED>
+<!ATTLIST spml type CDATA #IMPLIED>
+<!ATTLIST spml puddle CDATA #IMPLIED>
+<!ATTLIST spml uuid CDATA #IMPLIED>
+<!ATTLIST spml cdt CDATA #IMPLIED>
+<!ATTLIST spml mdt CDATA #IMPLIED>
+<!ATTLIST spml nextid CDATA #IMPLIED>
+<!ELEMENT entry (term*,text*,png?,svg?,video?,src*)>
+<!ATTLIST entry id CDATA #IMPLIED>
+<!ATTLIST entry uuid CDATA #IMPLIED>
+<!ATTLIST entry prev CDATA #IMPLIED>
+<!ATTLIST entry next CDATA #IMPLIED>
+<!ATTLIST entry cdt CDATA #IMPLIED>
+<!ATTLIST entry mdt CDATA #IMPLIED>
+<!ATTLIST entry usr CDATA #IMPLIED>
+<!ELEMENT term (#PCDATA)>
+<!ELEMENT text (#PCDATA)>
+<!ELEMENT png (#PCDATA)>
+<!ELEMENT svg (#PCDATA)>
+<!ELEMENT video (#PCDATA)>
+<!ELEMENT src (#PCDATA)>

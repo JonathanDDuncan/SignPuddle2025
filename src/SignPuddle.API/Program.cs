@@ -94,6 +94,7 @@ builder.Services.AddScoped<ISignService, SignService>();
 builder.Services.AddScoped<IFormatService, FormatService>();
 builder.Services.AddScoped<IRenderService, RenderService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ISpmlImportService, SpmlImportService>();
 
 // Register repositories
 builder.Services.AddScoped<ISignRepository, SignRepository>();
