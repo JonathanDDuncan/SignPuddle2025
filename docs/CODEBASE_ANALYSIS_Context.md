@@ -139,6 +139,8 @@ Symbols: Key, Category, Group, Name, SvgPath
 - `searchword.php`, `searchsign.php`: Search implementations
 
 ### Data Format Specifications
+- **[FSW Format Guide](FSW-Context.md)** - Complete FSW specification and patterns
+- **[SuttonSignWriting Library](SuttonSignWriting-Context.md)** - Core library integration guide
 - SPML DTD: `http://www.signpuddle.net/spml_1.6.dtd`
 - ISWA symbol data: `iswa.sql3` database
 - Session structure: `$_SESSION['SGN']`, `$_SESSION['UI']`

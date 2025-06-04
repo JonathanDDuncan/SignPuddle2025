@@ -747,6 +747,9 @@ public class SignController : ControllerBase
 - Migrated production data
 - Deployment procedures
 
+**📖 For detailed testing implementation guidelines:**
+→ **[Complete Testing Strategy Guide](TESTING_STRATEGY_Context.md)** - No-mocking approach, TDD workflows, and testing infrastructure
+
 ### Phase 5: Deployment and Transition (Month 12)
 **Objectives**: Go-live with new system
 

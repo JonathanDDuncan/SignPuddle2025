@@ -463,3 +463,6 @@ With focused effort on these priorities, the project can achieve MVP status with
 - ❌ Browser automation tests (Cypress/Playwright)
 - ❌ Performance and load testing
 - ❌ API integration tests with external services
+
+**📖 For detailed testing guidelines and procedures, see:**
+→ **[Complete Testing Strategy Guide](TESTING_STRATEGY_Context.md)** - Comprehensive testing approach, tools, and best practices
