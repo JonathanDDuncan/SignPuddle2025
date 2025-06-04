@@ -5,7 +5,7 @@
 ### Core Implementation
 - **SPML Data Models**: `SpmlModels.cs` with XML serialization support
 - **Import Service**: `SpmlImportService.cs` implementing `ISpmlImportService`
-- **REST API Controller**: `ImportController.cs` with file upload endpoints
+- **REST API Controller**: `SPMLController.cs` with file upload endpoints
 - **Dependency Injection**: Service registered in `Program.cs`
 
 ### Functionality
@@ -17,8 +17,8 @@
 - Handle various content types (text, video, source attribution)
 
 ### API Endpoints
-- `POST /api/import/spml` - Import SPML file directly
-- `POST /api/import/preview` - Preview SPML file contents before import
+- `POST /api/spml/import` - Import SPML file directly
+- `POST /api/spml/preview` - Preview SPML file contents before import
 
 ### Test Coverage
 - **32 passing tests** across multiple test classes:

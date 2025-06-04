@@ -9,7 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignPuddle.API.Tests", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignPuddle.API.E2ETests", "..\SignPuddle.API.E2ETests\SignPuddle.API.E2ETests.csproj", "{6069B937-391C-423B-B137-15892C73F252}"
 EndProject
-Global	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection

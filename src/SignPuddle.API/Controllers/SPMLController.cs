@@ -5,12 +5,12 @@ using SignPuddle.API.Services;
 namespace SignPuddle.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class ImportController : ControllerBase
+    [Route("api/spml")]
+    public class SPMLController : ControllerBase
     {
         private readonly ISpmlImportService _spmlImportService;
 
-        public ImportController(ISpmlImportService spmlImportService)
+        public SPMLController(ISpmlImportService spmlImportService)
         {
             _spmlImportService = spmlImportService;
         }
@@ -21,8 +21,8 @@ namespace SignPuddle.API.Controllers
         /// <param name="file">The SPML file to import</param>
         /// <param name="ownerId">Optional owner ID for the imported dictionary</param>
         /// <returns>Import result with dictionary and signs data</returns>
-        [HttpPost("spml")]
-        public async Task<ActionResult<SpmlImportResult>> ImportSpmlFile(
+        [HttpPost("import")]
+        public async Task<ActionResult<SpmlImportResult>> Import(
             IFormFile file, 
             [FromQuery] string? ownerId = null)
         {
@@ -76,8 +76,8 @@ namespace SignPuddle.API.Controllers
         /// </summary>
         /// <param name="file">The SPML file to preview</param>
         /// <returns>Preview information about the SPML file</returns>
-        [HttpPost("spml/preview")]
-        public async Task<ActionResult<SpmlPreview>> PreviewSpmlFile(IFormFile file)
+        [HttpPost("import/preview")]
+        public async Task<ActionResult<SpmlPreview>> Preview(IFormFile file)
         {
             if (file == null || file.Length == 0)
             {
