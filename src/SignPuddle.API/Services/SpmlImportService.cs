@@ -46,10 +46,11 @@ namespace SignPuddle.API.Services
         {
             if (spmlDocument == null)
                 throw new ArgumentNullException(nameof(spmlDocument));
-
             var dictionary = new Dictionary
             {
-                Name = spmlDocument.DictionaryName ?? $"Imported Dictionary {spmlDocument.PuddleId}",
+                PuddleId = spmlDocument.PuddleId.ToString(),
+                PuddleType = spmlDocument.Type,
+                Name = spmlDocument.DictionaryName ?? $"Imported Dictionary puddle {spmlDocument.PuddleId}",
                 Description = $"Imported from SPML puddle {spmlDocument.PuddleId}",
                 IsPublic = true,
                 OwnerId = ownerId,
@@ -72,16 +73,17 @@ namespace SignPuddle.API.Services
                 if (!entry.EntryId.HasValue)
                     continue;
                 // Use the helper function for FSW validation
-                if (!IsValidFswSign(entry.FswNotation) ||
+                if (!IsValidFswSign(entry.Fsw) ||
                     string.IsNullOrWhiteSpace(entry.Gloss))
                     continue; // Skip entries without proper FSW notation or gloss
 
                 var sign = new Sign
                 {
-                    Id = entry.EntryId.Value,
-                    Fsw = entry.FswNotation ?? string.Empty,
-                    Gloss = entry.Gloss,
                     DictionaryId = dictionaryId,
+                    PuddleSignId = entry.EntryId.Value,
+                    PuddleId = spmlDocument.PuddleId.ToString(),
+                    Fsw = entry.Fsw ?? string.Empty,
+                    Gloss = entry.Gloss,
                     SgmlText = entry.Text,
                     Created = entry.Created,
                     Updated = entry.Modified,
@@ -98,14 +100,7 @@ namespace SignPuddle.API.Services
                  /// </summary>
         private static bool IsValidFswSign(string? input)
         {
-            if (string.IsNullOrWhiteSpace(input))
-                return false;
-            // FSW sign: starts with 'A' or 'M', then 'S', then 3 hex digits, then 2 hex digits, then a BLMR character, then 3 digits, 'x', 3 digits
-            // Example: AS10000B500x500
-            // fswSignPattern: Formal SignWriting (FSW) sign string: an optional sort group, followed by a required box position (B, L, M, or R for Box, Left, Middle, Right), a coordinate, and zero or more positioned symbols.
-            var fswSignPattern = @"^(A(S[123][0-9a-f]{2}[0-5][0-9a-f])+)?[BLMR]([0-9]{3}x[0-9]{3})(S[123][0-9a-f]{2}[0-5][0-9a-f][0-9]{3}x[0-9]{3})*$";
-
-            return System.Text.RegularExpressions.Regex.IsMatch(input, fswSignPattern) ;
+            return SignPuddle.API.Models.FswValidation.IsValidFswSign(input);
         }
     }
 }

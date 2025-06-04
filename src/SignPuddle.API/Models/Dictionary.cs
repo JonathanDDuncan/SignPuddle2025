@@ -7,6 +7,8 @@ namespace SignPuddle.API.Models
         [Key]
         public int Id { get; set; }
         
+        public string? PuddleId { get; set; }
+        public string? PuddleType { get; set; }
         [Required]
         public string Name { get; set; } = string.Empty;
         
@@ -18,6 +20,6 @@ namespace SignPuddle.API.Models
         public string? OwnerId { get; set; } // User ID of owner
         
         public DateTime Created { get; set; } = DateTime.UtcNow;
-        public DateTime Updated { get; set; } = DateTime.UtcNow;
+        public DateTime Updated { get; set; } = DateTime.UtcNow; 
     }
 }

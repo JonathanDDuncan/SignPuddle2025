@@ -15,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using SignPuddle.API.Data;
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.DependencyInjection;
 
 public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
 {

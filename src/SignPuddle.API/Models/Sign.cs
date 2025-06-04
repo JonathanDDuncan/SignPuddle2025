@@ -5,14 +5,15 @@ namespace SignPuddle.API.Models
     public class Sign
     {
         [Key]
-        public int Id { get; set; }
+        public int PuddleSignId { get; set; }
         
-        [Required]
-        public string Fsw { get; set; } = string.Empty; // Formal SignWriting notation
+         public int DictionaryId { get; set; }
+        public string? PuddleId { get; set; }
+   
+        public string? Fsw { get; set; } = string.Empty; // Formal SignWriting notation
         
         public string? Gloss { get; set; } // Text translation/meaning
-        
-        public int DictionaryId { get; set; }
+
         public Dictionary? Dictionary { get; set; }
         
         public string? SgmlText { get; set; } // Sign text (if part of a sequence)

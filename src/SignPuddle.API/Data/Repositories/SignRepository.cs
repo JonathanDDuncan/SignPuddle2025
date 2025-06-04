@@ -32,7 +32,7 @@ namespace SignPuddle.API.Data
         {
             return await _context.Signs
                 .Include(s => s.Dictionary)
-                .FirstOrDefaultAsync(s => s.Id == id);
+                .FirstOrDefaultAsync(s => s.PuddleSignId == id);
         }
 
         public async Task<IEnumerable<Sign>> GetByDictionaryIdAsync(int dictionaryId)
@@ -58,7 +58,7 @@ namespace SignPuddle.API.Data
 
         public async Task<Sign?> UpdateAsync(Sign sign)
         {
-            var existingSign = await _context.Signs.FindAsync(sign.Id);
+            var existingSign = await _context.Signs.FindAsync(sign.PuddleSignId);
             if (existingSign == null)
             {
                 return null;

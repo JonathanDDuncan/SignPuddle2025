@@ -322,7 +322,7 @@ namespace SignPuddle.API.Tests.Data.Repositories
                 Terms = new List<string> { "Test Dictionary" },
                 Entries = new List<SpmlEntry>
                 {
-                    new SpmlEntry { Id = 1, Terms = new List<string> { "test" } }
+                    new SpmlEntry {  EntryId = 1, Terms = new List<string> { "test" } }
                 }
             };
             var entity3 = SpmlDocumentEntity.FromSpmlDocument(modifiedDocument, xmlContent, "owner3");

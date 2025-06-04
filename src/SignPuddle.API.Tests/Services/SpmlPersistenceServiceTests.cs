@@ -320,8 +320,8 @@ namespace SignPuddle.API.Tests.Services
                 Terms = new List<string> { "Test Dictionary" },
                 Entries = new List<SpmlEntry>
                 {
-                    new SpmlEntry { Id = 1, Terms = new List<string> { "test" } },
-                    new SpmlEntry { Id = 2, Terms = new List<string> { "another" } }
+                    new SpmlEntry { EntryId = 1, Terms = new List<string> { "test" } },
+                    new SpmlEntry { EntryId = 2, Terms = new List<string> { "another" } }
                 }
             };
             var ownerId = "test-owner";

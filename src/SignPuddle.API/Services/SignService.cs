@@ -11,6 +11,7 @@ namespace SignPuddle.API.Services
         Task<IEnumerable<Sign>> SearchSignsByGlossAsync(string searchTerm);
         Task<Sign> CreateSignAsync(Sign sign, string userId);
         Task<Sign?> UpdateSignAsync(Sign sign, string userId);
+        Task<Sign?> UpdateSignAsync(Sign sign);
         Task<bool> DeleteSignAsync(int id, string userId);
     }
 
@@ -55,11 +56,18 @@ namespace SignPuddle.API.Services
             return await _signRepository.CreateAsync(sign);
         }
 
+        public async Task<Sign?> UpdateSignAsync(Sign sign)
+        {
+            sign.Updated = DateTime.UtcNow;
+            
+            return await _signRepository.UpdateAsync(sign);
+        }
+
         public async Task<Sign?> UpdateSignAsync(Sign sign, string userId)
         {
             sign.UpdatedBy = userId;
             sign.Updated = DateTime.UtcNow;
-            
+
             return await _signRepository.UpdateAsync(sign);
         }
 

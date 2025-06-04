@@ -78,7 +78,7 @@ namespace SignPuddle.API.Tests.Services
 
             // Test first entry
             var firstEntry = result.Entries[0];
-            Assert.Equal(1, firstEntry.Id);
+            Assert.Equal(1, firstEntry.EntryId);
             Assert.Equal("Val", firstEntry.User);
             Assert.Equal(1311183542, firstEntry.CreatedTimestamp);
             Assert.Equal(1311183729, firstEntry.ModifiedTimestamp);
@@ -101,11 +101,11 @@ namespace SignPuddle.API.Tests.Services
 
             // Assert
             var testEntry = result.Entries[0];
-            Assert.Equal("AS17620S15a18S22a02M523x514S15a18478x487S22a02508x495S17620491x494", testEntry.FswNotation);
+            Assert.Equal("AS17620S15a18S22a02M523x514S15a18478x487S22a02508x495S17620491x494", testEntry.Fsw);
             Assert.Equal("test zero", testEntry.Gloss);
 
             var delayEntry = result.Entries[2];
-            Assert.Equal("AS1ce40S1ce48S2b800M523x537S1ce40501x507S1ce48478x507S2b800498x462", delayEntry.FswNotation);
+            Assert.Equal("AS1ce40S1ce48S2b800M523x537S1ce40501x507S1ce48478x507S2b800498x462", delayEntry.Fsw);
             Assert.Equal("DELAY", delayEntry.Gloss);
         }
 
@@ -161,7 +161,7 @@ namespace SignPuddle.API.Tests.Services
 
             // Test first sign
             var firstSign = signs[0];
-            Assert.Equal(1, firstSign.Id);
+            Assert.Equal(1, firstSign.PuddleSignId);
             Assert.Equal("AS17620S15a18S22a02M523x514S15a18478x487S22a02508x495S17620491x494", firstSign.Fsw);
             Assert.Equal("test zero", firstSign.Gloss);
             Assert.Equal(dictionaryId, firstSign.DictionaryId);
@@ -215,7 +215,7 @@ namespace SignPuddle.API.Tests.Services
  
             // Assert
             var delayEntry = result.Entries[2]; // Entry with id="3" (DELAY)
-            Assert.Equal(3, delayEntry.Id);
+            Assert.Equal(3, delayEntry.EntryId);
             Assert.Equal("admin", delayEntry.User);
             Assert.Equal("DELAY", delayEntry.Gloss);
             Assert.Equal("Delay, postpone, move forward in time", delayEntry.Text);

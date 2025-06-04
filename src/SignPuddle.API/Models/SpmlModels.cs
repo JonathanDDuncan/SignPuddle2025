@@ -206,11 +206,11 @@ namespace SignPuddle.API.Models
         public DateTime Created => DateTimeOffset.FromUnixTimeSeconds(CreatedTimestamp ?? 0).UtcDateTime;
         public DateTime Modified => DateTimeOffset.FromUnixTimeSeconds(ModifiedTimestamp ?? 0).UtcDateTime;
 
-        // Extract FSW notation (first term starting with "AS" or "M")
-        public string? FswNotation => Terms.FirstOrDefault(t => t.StartsWith("AS") || t.StartsWith("M"));
+        // Extract FSW notation (first term that is a valid FSW sign)
+        public string? Fsw => Terms.FirstOrDefault(t => FswValidation.IsValidFswSign(t));
 
         // Extract gloss (first non-FSW term)
-        public string? Gloss => Terms.FirstOrDefault(t => !t.StartsWith("AS") && !t.StartsWith("M"));
+        public string? Gloss => Terms.FirstOrDefault(t => !FswValidation.IsValidFswSign(t));
 
         // Backward compatibility properties
         public string? Text => TextElements.FirstOrDefault();

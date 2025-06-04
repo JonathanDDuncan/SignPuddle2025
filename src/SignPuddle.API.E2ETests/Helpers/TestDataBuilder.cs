@@ -19,7 +19,7 @@ namespace SignPuddle.API.E2ETests.Controllers
             {
                 return new Sign
                 {
-                    Id = id
+                    PuddleSignId = id
                     // Add only the properties that actually exist in your Sign model
                 };
             }

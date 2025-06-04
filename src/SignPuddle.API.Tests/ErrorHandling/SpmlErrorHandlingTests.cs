@@ -207,7 +207,7 @@ namespace SignPuddle.API.Tests.ErrorHandling
                     Terms = new List<string> { $"Test Dictionary {i}" },
                     Entries = Enumerable.Range(1, 10).Select(j => new SpmlEntry
                     {
-                        Id = j,
+                        EntryId = j,
                         Terms = new List<string> { $"term-{i}-{j}" }
                     }).ToList()
                 };

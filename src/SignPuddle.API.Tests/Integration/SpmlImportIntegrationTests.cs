@@ -82,7 +82,7 @@ namespace SignPuddle.API.Tests.Integration
             Assert.Contains("youtube.com", entryWithVideo.Video);
             Assert.Contains("iframe", entryWithVideo.Video);
 
-            var entryWithLongFsw = spmlDocument.Entries.FirstOrDefault(e => e.FswNotation?.Length > 100);
+            var entryWithLongFsw = spmlDocument.Entries.FirstOrDefault(e => e.Fsw?.Length > 100);
             Assert.NotNull(entryWithLongFsw);
 
             var entryWithComplexSource = spmlDocument.Entries.FirstOrDefault(e => e.Source?.Contains(",") == true);
