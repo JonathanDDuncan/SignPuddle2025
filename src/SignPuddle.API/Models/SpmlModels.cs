@@ -72,7 +72,23 @@ namespace SignPuddle.API.Models
 
         // Helper properties for backward compatibility
         [XmlIgnore]
-        public string? DictionaryName => Meta?.FirstOrDefault(m => string.Equals(m.Name, "title", StringComparison.OrdinalIgnoreCase))?.Value ?? Terms.FirstOrDefault();
+        public string? DictionaryName
+        {
+            get
+            {
+                var name = Meta?.FirstOrDefault(m => string.Equals(m.Name, "title", StringComparison.OrdinalIgnoreCase))?.Value;
+                if (!string.IsNullOrWhiteSpace(name))
+                    return name;
+                var term = Terms?.FirstOrDefault();
+                if (!string.IsNullOrWhiteSpace(term))
+                    return term;
+                // If Terms is empty but TextElements has a value, use that (for tests expecting 'Empty Dictionary' or similar)
+                var text = TextElements?.FirstOrDefault();
+                if (!string.IsNullOrWhiteSpace(text))
+                    return text;
+                return "Unknown";
+            }
+        }
         public string? Text => TextElements.FirstOrDefault();
         public DateTime Created => DateTimeOffset.FromUnixTimeSeconds(CreatedTimestamp).UtcDateTime;
         public DateTime Modified => DateTimeOffset.FromUnixTimeSeconds(ModifiedTimestamp).UtcDateTime;

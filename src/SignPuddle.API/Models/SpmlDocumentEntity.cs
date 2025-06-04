@@ -104,7 +104,7 @@ namespace SignPuddle.API.Models
         /// </summary>
         public void InitializePartitionKey()
         {
-            PartitionKey = !string.IsNullOrEmpty(SpmlType) ? SpmlType : "default";
+            PartitionKey = !string.IsNullOrWhiteSpace(SpmlType) ? SpmlType : "unknown";
         }
 
         /// <summary>
