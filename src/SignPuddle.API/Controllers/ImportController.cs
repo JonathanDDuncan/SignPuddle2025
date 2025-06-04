@@ -110,7 +110,7 @@ namespace SignPuddle.API.Controllers
                     EntriesWithSource = spmlDocument.Entries.Count(e => !string.IsNullOrEmpty(e.Source)),
                     SampleEntries = spmlDocument.Entries.Take(5).Select(e => new SpmlEntryPreview
                     {
-                        Id = e.Id,
+                        Id = e.EntryId ?? 0,
                         FswNotation = e.FswNotation,
                         Gloss = e.Gloss,
                         User = e.User,

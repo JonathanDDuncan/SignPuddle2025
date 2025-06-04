@@ -68,6 +68,9 @@ namespace SignPuddle.API.Services
 
             foreach (var entry in spmlDocument.Entries)
             {
+                // Skip entries with invalid or missing EntryId
+                if (!entry.EntryId.HasValue)
+                    continue;
                 // Use the helper function for FSW validation
                 if (!IsValidFsw(entry.FswNotation) ||
                     string.IsNullOrWhiteSpace(entry.Gloss))
@@ -75,7 +78,7 @@ namespace SignPuddle.API.Services
 
                 var sign = new Sign
                 {
-                    Id = entry.Id,
+                    Id = entry.EntryId.Value,
                     Fsw = entry.FswNotation ?? string.Empty,
                     Gloss = entry.Gloss,
                     DictionaryId = dictionaryId,

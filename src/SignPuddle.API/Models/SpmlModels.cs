@@ -82,6 +82,27 @@ namespace SignPuddle.API.Models
         public List<string> Sources { get; set; } = new List<string>();
 
         [XmlElement("entry")]
+        public List<SpmlEntry> XmlEntries
+        {
+            get => Entries;
+            set
+            {
+                Entries = new List<SpmlEntry>();
+                if (value != null)
+                {
+                    foreach (var entry in value)
+                    {
+                        // Only add entries with valid integer EntryId
+                        if (entry != null && entry.EntryId.HasValue)
+                        {
+                            Entries.Add(entry);
+                        }
+                    }
+                }
+            }
+        }
+
+        [XmlIgnore]
         public List<SpmlEntry> Entries { get; set; } = new List<SpmlEntry>();
 
         [XmlElement("meta")]
@@ -118,8 +139,15 @@ namespace SignPuddle.API.Models
     public class SpmlEntry
     {
         // DTD Attributes: id, uuid, prev, next, cdt, mdt, usr (all IMPLIED)
+        [XmlIgnore]
+        public int? EntryId { get; set; }
+
         [XmlAttribute("id")]
-        public int Id { get; set; }
+        public string? IdString
+        {
+            get => EntryId?.ToString();
+            set => EntryId = int.TryParse(value, out var v) ? v : (int?)null;
+        }
 
         [XmlAttribute("uuid")]
         public string? Uuid { get; set; }
