@@ -428,3 +428,38 @@ The SignPuddle 2.0 project has made solid progress on foundational architecture 
 4. Plan and execute legacy data migration
 
 With focused effort on these priorities, the project can achieve MVP status within the next 2-3 months and full feature completion within 6-8 months.
+
+# Testing Strategy
+
+#### ✅ **COMPLETED** (70%)
+
+**Testing Philosophy:**
+- ✅ **No mocking libraries** (Moq removed from dependencies)
+- ✅ **Real implementation testing** for reliability
+- ✅ **Separate E2E tests** for controller endpoints
+- ✅ **Unit tests** for business logic and services
+
+**Current Test Coverage:**
+- ✅ **API Unit Tests** (`SignPuddle.API.Tests`):
+  - Service layer tests (SpmlImportService)
+  - Integration tests for complex workflows
+  - Real file I/O testing with test data
+  - 32+ passing tests across multiple scenarios
+
+- ✅ **E2E Controller Tests** (`SignPuddle.API.E2ETests`):
+  - HTTP endpoint testing via TestWebApplicationFactory
+  - Authentication flow testing
+  - Request/response validation
+  - Health check verification
+
+**Testing Infrastructure:**
+- ✅ xUnit framework for both unit and E2E tests
+- ✅ TestWebApplicationFactory for in-memory test server
+- ✅ Real test data files for validation
+- ✅ Proper test isolation and cleanup
+
+**Missing Test Areas:**
+- ❌ Frontend component tests (Svelte)
+- ❌ Browser automation tests (Cypress/Playwright)
+- ❌ Performance and load testing
+- ❌ API integration tests with external services

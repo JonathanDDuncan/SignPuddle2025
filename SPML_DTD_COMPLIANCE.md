@@ -80,7 +80,7 @@ The implementation correctly serializes/deserializes SPML files according to DTD
 ### 📋 Production Ready Features
 
 1. **Full DTD Compliance**: Passes XML validation against `spml_1.6.dtd`
-2. **Comprehensive Testing**: 32 passing tests covering all scenarios
+2. **Comprehensive Testing**: 32 passing tests covering all scenarios (no mocking libraries used)
 3. **Error Handling**: Robust parsing with proper exception handling
 4. **Performance**: Async I/O operations for large files
 5. **Type Safety**: Nullable reference types and proper validation

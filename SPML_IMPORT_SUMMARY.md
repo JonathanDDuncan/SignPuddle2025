@@ -22,9 +22,9 @@
 
 ### Test Coverage
 - **32 passing tests** across multiple test classes:
-  - `SpmlImportServiceTests.cs` - 15+ unit tests
+  - `SpmlImportServiceTests.cs` - 15+ unit tests (no mocking libraries used)
   - `SpmlImportIntegrationTests.cs` - 6 integration tests  
-  - `ImportControllerTests.cs` - 11+ controller tests
+  - Controller endpoints tested via SignPuddle.API.E2ETests project
 
 ## 🔧 TECHNICAL DETAILS
 
