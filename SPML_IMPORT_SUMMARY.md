@@ -69,3 +69,29 @@ Test summary: total: 32, failed: 0, succeeded: 32, skipped: 0
 - Gloss text extraction
 - Optional fields: text descriptions, video embeds, source attribution
 - Unix timestamp conversion to UTC DateTime objects
+
+# SPML Import Summary
+
+## Import Approach
+
+- **Incremental Import:**
+  - SPML files will be imported one at a time, not as a full migration.
+  - The import process is designed to be repeatable for the same SPML file (e.g., for periodic updates).
+  - On each import, the system will check for new or modified entries in the SPML and update the database accordingly.
+  - This allows you to periodically fetch the latest version of an SPML file and synchronize only the changes (additions/updates) to your database.
+
+## Workflow
+
+1. **User uploads or provides an SPML file.**
+2. **System parses the SPML and compares entries to the current database state.**
+3. **New entries are added; modified entries are updated.**
+4. **No full-database migration is performed.**
+5. **This process can be repeated as new SPML versions become available.**
+
+## Notes
+- This approach supports ongoing dictionary maintenance and incremental updates.
+- It is suitable for workflows where the SPML source is updated over time and you want to keep your database in sync without re-importing everything.
+
+---
+
+*This document describes the incremental, file-at-a-time import and update strategy for SPML dictionaries in SignPuddle 2.0.*
