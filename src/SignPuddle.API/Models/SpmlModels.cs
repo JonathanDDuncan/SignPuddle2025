@@ -40,11 +40,25 @@ namespace SignPuddle.API.Models
         [XmlAttribute("uuid")]
         public string? Uuid { get; set; }
 
+        [XmlIgnore]
+        public long? CreatedTimestamp { get; set; }
+
         [XmlAttribute("cdt")]
-        public long CreatedTimestamp { get; set; }
+        public string? CreatedTimestampString
+        {
+            get => CreatedTimestamp?.ToString();
+            set => CreatedTimestamp = long.TryParse(value, out var v) ? v : (long?)null;
+        }
+
+        [XmlIgnore]
+        public long? ModifiedTimestamp { get; set; }
 
         [XmlAttribute("mdt")]
-        public long ModifiedTimestamp { get; set; }
+        public string? ModifiedTimestampString
+        {
+            get => ModifiedTimestamp?.ToString();
+            set => ModifiedTimestamp = long.TryParse(value, out var v) ? v : (long?)null;
+        }
 
         [XmlAttribute("nextid")]
         public int NextId { get; set; }
@@ -93,8 +107,8 @@ namespace SignPuddle.API.Models
             }
         }
         public string? Text => TextElements.FirstOrDefault();
-        public DateTime Created => DateTimeOffset.FromUnixTimeSeconds(CreatedTimestamp).UtcDateTime;
-        public DateTime Modified => DateTimeOffset.FromUnixTimeSeconds(ModifiedTimestamp).UtcDateTime;
+        public DateTime Created => DateTimeOffset.FromUnixTimeSeconds(CreatedTimestamp ?? 0).UtcDateTime;
+        public DateTime Modified => DateTimeOffset.FromUnixTimeSeconds(ModifiedTimestamp ?? 0).UtcDateTime;
     }
 
     /// <summary>
@@ -116,11 +130,25 @@ namespace SignPuddle.API.Models
         [XmlAttribute("next")]
         public string? Next { get; set; }
 
+        [XmlIgnore]
+        public long? CreatedTimestamp { get; set; }
+
         [XmlAttribute("cdt")]
-        public long CreatedTimestamp { get; set; }
+        public string? CreatedTimestampString
+        {
+            get => CreatedTimestamp?.ToString();
+            set => CreatedTimestamp = long.TryParse(value, out var v) ? v : (long?)null;
+        }
+
+        [XmlIgnore]
+        public long? ModifiedTimestamp { get; set; }
 
         [XmlAttribute("mdt")]
-        public long ModifiedTimestamp { get; set; }
+        public string? ModifiedTimestampString
+        {
+            get => ModifiedTimestamp?.ToString();
+            set => ModifiedTimestamp = long.TryParse(value, out var v) ? v : (long?)null;
+        }
 
         [XmlAttribute("usr")]
         public string User { get; set; } = string.Empty;
@@ -147,8 +175,8 @@ namespace SignPuddle.API.Models
         public List<string> Sources { get; set; } = new List<string>();
 
         // Helper properties for backward compatibility
-        public DateTime Created => DateTimeOffset.FromUnixTimeSeconds(CreatedTimestamp).UtcDateTime;
-        public DateTime Modified => DateTimeOffset.FromUnixTimeSeconds(ModifiedTimestamp).UtcDateTime;
+        public DateTime Created => DateTimeOffset.FromUnixTimeSeconds(CreatedTimestamp ?? 0).UtcDateTime;
+        public DateTime Modified => DateTimeOffset.FromUnixTimeSeconds(ModifiedTimestamp ?? 0).UtcDateTime;
 
         // Extract FSW notation (first term starting with "AS" or "M")
         public string? FswNotation => Terms.FirstOrDefault(t => t.StartsWith("AS") || t.StartsWith("M"));
@@ -179,14 +207,28 @@ namespace SignPuddle.API.Models
         [XmlAttribute("owner")]
         public string? Owner { get; set; }
 
+        [XmlIgnore]
+        public long? CreatedTimestamp { get; set; }
+
         [XmlAttribute("cdt")]
-        public long CreatedTimestamp { get; set; }
+        public string? CreatedTimestampString
+        {
+            get => CreatedTimestamp?.ToString();
+            set => CreatedTimestamp = long.TryParse(value, out var v) ? v : (long?)null;
+        }
+
+        [XmlIgnore]
+        public long? ModifiedTimestamp { get; set; }
 
         [XmlAttribute("mdt")]
-        public long ModifiedTimestamp { get; set; }
+        public string? ModifiedTimestampString
+        {
+            get => ModifiedTimestamp?.ToString();
+            set => ModifiedTimestamp = long.TryParse(value, out var v) ? v : (long?)null;
+        }
 
         // Helper properties
-        public DateTime Created => DateTimeOffset.FromUnixTimeSeconds(CreatedTimestamp).UtcDateTime;
-        public DateTime Modified => DateTimeOffset.FromUnixTimeSeconds(ModifiedTimestamp).UtcDateTime;
+        public DateTime Created => DateTimeOffset.FromUnixTimeSeconds(CreatedTimestamp ?? 0).UtcDateTime;
+        public DateTime Modified => DateTimeOffset.FromUnixTimeSeconds(ModifiedTimestamp ?? 0).UtcDateTime;
     }
 }

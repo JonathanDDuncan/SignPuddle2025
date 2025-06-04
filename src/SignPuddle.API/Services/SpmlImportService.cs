@@ -76,7 +76,7 @@ namespace SignPuddle.API.Services
                 var sign = new Sign
                 {
                     Id = entry.Id,
-                    Fsw = entry.FswNotation,
+                    Fsw = entry.FswNotation ?? string.Empty,
                     Gloss = entry.Gloss,
                     DictionaryId = dictionaryId,
                     SgmlText = entry.Text,
