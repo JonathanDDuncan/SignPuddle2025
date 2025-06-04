@@ -22,8 +22,8 @@ builder.Services.AddControllers(options =>
     var jsonOptions = new JsonSerializerOptions
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
-        ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve // Add this line
+        TypeInfoResolver = new DefaultJsonTypeInfoResolver()
+        // ReferenceHandler removed to avoid $id/$values serialization
     };
 
     options.OutputFormatters.Add(new SystemTextJsonOutputFormatter(jsonOptions));

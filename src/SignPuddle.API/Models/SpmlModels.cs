@@ -1,4 +1,5 @@
 using System.Xml.Serialization;
+using System.Text.Json.Serialization;
 
 namespace SignPuddle.API.Models
 {
@@ -50,6 +51,8 @@ namespace SignPuddle.API.Models
 
         // DTD Elements in order: (term*,text*,png?,svg?,src*,entry*)
         [XmlElement("term")]
+        [JsonPropertyName("terms")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string> Terms { get; set; } = new List<string>();
 
         [XmlElement("text")]
@@ -124,6 +127,8 @@ namespace SignPuddle.API.Models
 
         // DTD Elements in order: (term*,text*,png?,svg?,video?,src*)
         [XmlElement("term")]
+        [JsonPropertyName("terms")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string> Terms { get; set; } = new List<string>();
 
         [XmlElement("text")]

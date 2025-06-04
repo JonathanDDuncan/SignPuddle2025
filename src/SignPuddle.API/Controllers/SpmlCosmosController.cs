@@ -254,8 +254,18 @@ namespace SignPuddle.API.Controllers
         [HttpGet("stats")]
         public async Task<ActionResult<SpmlStats>> GetStats()
         {
-            var stats = await _spmlPersistenceService.GetSpmlDocumentStatsAsync();
-            return Ok(stats);
+            try
+            {
+                var stats = await _spmlPersistenceService.GetSpmlDocumentStatsAsync();
+                if (stats == null)
+                    return NotFound();
+                return Ok(stats);
+            }
+            catch (Exception ex)
+            {
+                // Return the error message and stack trace for debugging
+                return StatusCode(500, new { error = "Failed to retrieve SPML stats", message = ex.Message, stackTrace = ex.StackTrace });
+            }
         }
 
         /// <summary>
