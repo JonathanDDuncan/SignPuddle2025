@@ -7,6 +7,7 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using HealthChecks.CosmosDb;
 using SignPuddle.API.Data;
+using SignPuddle.API.Data.Repositories;
 using SignPuddle.API.Services;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
@@ -95,12 +96,14 @@ builder.Services.AddScoped<IFormatService, FormatService>();
 builder.Services.AddScoped<IRenderService, RenderService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISpmlImportService, SpmlImportService>();
+builder.Services.AddScoped<ISpmlPersistenceService, SpmlPersistenceService>();
 
 // Register repositories
 builder.Services.AddScoped<ISignRepository, SignRepository>();
 builder.Services.AddScoped<ISymbolRepository, SymbolRepository>();
 builder.Services.AddScoped<IDictionaryRepository, DictionaryRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISpmlRepository, SpmlRepository>();
 
 // Add CORS policy for Svelte frontend
 builder.Services.AddCors(options =>
