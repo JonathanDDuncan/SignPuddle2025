@@ -72,7 +72,7 @@ namespace SignPuddle.API.Services
                 if (!entry.EntryId.HasValue)
                     continue;
                 // Use the helper function for FSW validation
-                if (!IsValidFsw(entry.FswNotation) ||
+                if (!IsValidFswSign(entry.FswNotation) ||
                     string.IsNullOrWhiteSpace(entry.Gloss))
                     continue; // Skip entries without proper FSW notation or gloss
 
@@ -96,27 +96,16 @@ namespace SignPuddle.API.Services
         }        /// <summary>
                  /// Determines if the input string is a valid Formal SignWriting (FSW) string.
                  /// </summary>
-        private static bool IsValidFsw(string? input)
+        private static bool IsValidFswSign(string? input)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return false;
-
             // FSW sign: starts with 'A' or 'M', then 'S', then 3 hex digits, then 2 hex digits, then a BLMR character, then 3 digits, 'x', 3 digits
             // Example: AS10000B500x500
             // fswSignPattern: Formal SignWriting (FSW) sign string: an optional sort group, followed by a required box position (B, L, M, or R for Box, Left, Middle, Right), a coordinate, and zero or more positioned symbols.
             var fswSignPattern = @"^(A(S[123][0-9a-f]{2}[0-5][0-9a-f])+)?[BLMR]([0-9]{3}x[0-9]{3})(S[123][0-9a-f]{2}[0-5][0-9a-f][0-9]{3}x[0-9]{3})*$";
 
-            // FSW spatial: S + 3 hex + 2 hex + 3 digits x 3 digits
-            var fswSpatialPattern = @"^S[0-9a-fA-F]{3}[0-5][0-9a-fA-F][0-9]{3}x[0-9]{3}";
-            // FSW symbol: S + 3 hex + 2 hex
-            var fswSymbolPattern = @"^S[0-9a-fA-F]{3}[0-5][0-9a-fA-F]";
-            // FSW coordinate: 3 digits x 3 digits
-            var fswCoordPattern = @"^[0-9]{3}x[0-9]{3}";
-
-            return System.Text.RegularExpressions.Regex.IsMatch(input, fswSignPattern)
-                || System.Text.RegularExpressions.Regex.IsMatch(input, fswSpatialPattern)
-                || System.Text.RegularExpressions.Regex.IsMatch(input, fswSymbolPattern)
-                || System.Text.RegularExpressions.Regex.IsMatch(input, fswCoordPattern);
+            return System.Text.RegularExpressions.Regex.IsMatch(input, fswSignPattern) ;
         }
     }
 }
