@@ -35,13 +35,6 @@ namespace SignPuddle.API.Controllers
             return Ok(dictionary);
         }
 
-        [HttpGet("language/{language}")]
-        public async Task<IActionResult> GetDictionariesByLanguage(string language)
-        {
-            var dictionaries = await _dictionaryRepository.GetByLanguageAsync(language);
-            return Ok(dictionaries);
-        }
-
         [Authorize]
         [HttpGet("my")]
         public async Task<IActionResult> GetMyDictionaries()

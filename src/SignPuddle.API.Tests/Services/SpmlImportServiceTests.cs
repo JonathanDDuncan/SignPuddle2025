@@ -124,7 +124,6 @@ namespace SignPuddle.API.Tests.Services
             Assert.NotNull(dictionary);
             Assert.Equal("Dictionary US", dictionary.Name);
             Assert.Equal("Imported from SPML puddle 4", dictionary.Description);
-            Assert.Equal("sgn", dictionary.Language);
             Assert.True(dictionary.IsPublic);
             Assert.Equal(ownerId, dictionary.OwnerId);
             Assert.Equal(spmlDocument.Created, dictionary.Created);
@@ -205,39 +204,15 @@ namespace SignPuddle.API.Tests.Services
             Assert.Equal("valid sign", signs[0].Gloss);
         }
 
-        [Theory]
-        [InlineData("sgn", "sgn")]
-        [InlineData("ase", "ase")]
-        [InlineData("bsl", "bsl")]
-        [InlineData("fsl", "fsl")]
-        [InlineData("unknown", "sgn")]
-        public async Task ConvertToDictionaryAsync_ShouldMapLanguageCorrectly(string inputType, string expectedLanguage)
-        {
-            // Arrange
-            var xmlContent = $@"<?xml version=""1.0"" encoding=""UTF-8""?>
-<!DOCTYPE spml SYSTEM ""http://www.signpuddle.net/spml_1.6.dtd"">
-<spml root=""http://www.signbank.org/signpuddle1.6"" type=""{inputType}"" puddle=""4"" cdt=""1203374232"" mdt=""1311025253"" nextid=""11237"">
-  <term><![CDATA[Test Dictionary]]></term>
-</spml>";
-
-            var spmlDocument = await _spmlImportService.ParseSpmlAsync(xmlContent);
-
-            // Act
-            var dictionary = await _spmlImportService.ConvertToDictionaryAsync(spmlDocument);
-
-            // Assert
-            Assert.Equal(expectedLanguage, dictionary.Language);
-        }
-
         [Fact]
         public async Task ParseSpmlAsync_WithComplexEntry_ShouldParseAllFields()
         {
             // Arrange
             var xmlContent = await File.ReadAllTextAsync(_testDataPath);
-
+ 
             // Act
             var result = await _spmlImportService.ParseSpmlAsync(xmlContent);
-
+ 
             // Assert
             var delayEntry = result.Entries[2]; // Entry with id="3" (DELAY)
             Assert.Equal(3, delayEntry.Id);

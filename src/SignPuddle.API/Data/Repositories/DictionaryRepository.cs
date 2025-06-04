@@ -7,7 +7,6 @@ namespace SignPuddle.API.Data
     {
         Task<IEnumerable<Dictionary>> GetAllAsync();
         Task<Dictionary?> GetByIdAsync(int id);
-        Task<IEnumerable<Dictionary>> GetByLanguageAsync(string language);
         Task<IEnumerable<Dictionary>> GetByOwnerAsync(string ownerId);
         Task<Dictionary> CreateAsync(Dictionary dictionary);
         Task<Dictionary?> UpdateAsync(Dictionary dictionary);
@@ -31,13 +30,6 @@ namespace SignPuddle.API.Data
         public async Task<Dictionary?> GetByIdAsync(int id)
         {
             return await _context.Dictionaries.FindAsync(id);
-        }
-
-        public async Task<IEnumerable<Dictionary>> GetByLanguageAsync(string language)
-        {
-            return await _context.Dictionaries
-                .Where(d => d.Language == language)
-                .ToListAsync();
         }
 
         public async Task<IEnumerable<Dictionary>> GetByOwnerAsync(string ownerId)

@@ -17,16 +17,16 @@ namespace SignPuddle.API.Services
         public async Task<SpmlDocument> ParseSpmlAsync(string xmlContent)
         {
             var serializer = new XmlSerializer(typeof(SpmlDocument));
-            
+
             using var stringReader = new StringReader(xmlContent);
-            using var xmlReader = XmlReader.Create(stringReader, new XmlReaderSettings 
-            { 
+            using var xmlReader = XmlReader.Create(stringReader, new XmlReaderSettings
+            {
                 DtdProcessing = DtdProcessing.Ignore,
                 ValidationType = ValidationType.None
             });
 
             var spmlDocument = (SpmlDocument?)serializer.Deserialize(xmlReader);
-            
+
             if (spmlDocument == null)
                 throw new InvalidOperationException("Failed to deserialize SPML document");
 
@@ -51,7 +51,6 @@ namespace SignPuddle.API.Services
             {
                 Name = spmlDocument.DictionaryName ?? $"Imported Dictionary {spmlDocument.PuddleId}",
                 Description = $"Imported from SPML puddle {spmlDocument.PuddleId}",
-                Language = DetermineLanguageFromType(spmlDocument.Type),
                 IsPublic = true,
                 OwnerId = ownerId,
                 Created = spmlDocument.Created,
@@ -59,7 +58,8 @@ namespace SignPuddle.API.Services
             };
 
             return await Task.FromResult(dictionary);
-        }        public async Task<List<Sign>> ConvertToSignsAsync(SpmlDocument spmlDocument, int dictionaryId)
+        }
+        public async Task<List<Sign>> ConvertToSignsAsync(SpmlDocument spmlDocument, int dictionaryId)
         {
             if (spmlDocument == null)
                 throw new ArgumentNullException(nameof(spmlDocument));
@@ -90,26 +90,30 @@ namespace SignPuddle.API.Services
             }
 
             return await Task.FromResult(signs);
-        }        private static string DetermineLanguageFromType(string type)
-        {
-            return type.ToLower() switch
-            {
-                "sgn" => "sgn", // Generic sign language
-                "ase" => "ase", // American Sign Language
-                "bsl" => "bsl", // British Sign Language
-                "fsl" => "fsl", // French Sign Language
-                _ => "sgn" // Default to generic sign language
-            };
-        }
-
-        // This method is in the API layer, not in the test code.
+        }        /// <summary>
+                 /// Determines if the input string is a valid Formal SignWriting (FSW) string.
+                 /// </summary>
         private static bool IsValidFsw(string? input)
         {
-            // FSW strings typically start with "AS" or "MS" followed by digits and symbols.
-            // This regex matches a basic FSW sign string: starts with 'A' or 'M', then 'S', then at least 5 digits.
             if (string.IsNullOrWhiteSpace(input))
                 return false;
-            return System.Text.RegularExpressions.Regex.IsMatch(input, @"^[AM]S\d{5}");
+
+            // FSW sign: starts with 'A' or 'M', then 'S', then 3 hex digits, then 2 hex digits, then a BLMR character, then 3 digits, 'x', 3 digits
+            // Example: AS10000B500x500
+            // fswSignPattern: Formal SignWriting (FSW) sign string: an optional sort group, followed by a required box position (B, L, M, or R for Box, Left, Middle, Right), a coordinate, and zero or more positioned symbols.
+            var fswSignPattern = @"^(A(S[123][0-9a-f]{2}[0-5][0-9a-f])+)?[BLMR]([0-9]{3}x[0-9]{3})(S[123][0-9a-f]{2}[0-5][0-9a-f][0-9]{3}x[0-9]{3})*$";
+
+            // FSW spatial: S + 3 hex + 2 hex + 3 digits x 3 digits
+            var fswSpatialPattern = @"^S[0-9a-fA-F]{3}[0-5][0-9a-fA-F][0-9]{3}x[0-9]{3}";
+            // FSW symbol: S + 3 hex + 2 hex
+            var fswSymbolPattern = @"^S[0-9a-fA-F]{3}[0-5][0-9a-fA-F]";
+            // FSW coordinate: 3 digits x 3 digits
+            var fswCoordPattern = @"^[0-9]{3}x[0-9]{3}";
+
+            return System.Text.RegularExpressions.Regex.IsMatch(input, fswSignPattern)
+                || System.Text.RegularExpressions.Regex.IsMatch(input, fswSpatialPattern)
+                || System.Text.RegularExpressions.Regex.IsMatch(input, fswSymbolPattern)
+                || System.Text.RegularExpressions.Regex.IsMatch(input, fswCoordPattern);
         }
     }
 }

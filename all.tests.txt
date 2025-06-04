@@ -16,11 +16,6 @@ The following Tests are available:
     SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToDictionaryAsync_WithNullOwner_ShouldCreateDictionaryWithoutOwner
     SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToSignsAsync_ShouldCreateValidSigns
     SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToSignsAsync_ShouldSkipEntriesWithoutFsw
-    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToDictionaryAsync_ShouldMapLanguageCorrectly(inputType: "sgn", expectedLanguage: "sgn")
-    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToDictionaryAsync_ShouldMapLanguageCorrectly(inputType: "ase", expectedLanguage: "ase")
-    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToDictionaryAsync_ShouldMapLanguageCorrectly(inputType: "bsl", expectedLanguage: "bsl")
-    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToDictionaryAsync_ShouldMapLanguageCorrectly(inputType: "fsl", expectedLanguage: "fsl")
-    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToDictionaryAsync_ShouldMapLanguageCorrectly(inputType: "unknown", expectedLanguage: "sgn")
     SignPuddle.API.Tests.Services.SpmlImportServiceTests.ParseSpmlAsync_WithComplexEntry_ShouldParseAllFields
     SignPuddle.API.Tests.Services.SpmlImportServiceTests.SpmlDocument_TimestampConversion_ShouldWorkCorrectly
     SignPuddle.API.Tests.Services.SpmlImportServiceTests.SpmlEntry_TimestampConversion_ShouldWorkCorrectly

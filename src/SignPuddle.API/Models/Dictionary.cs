@@ -12,9 +12,7 @@ namespace SignPuddle.API.Models
         
         public string? Description { get; set; }
         
-        [Required]
-        public string Language { get; set; } = string.Empty; // ISO code
-        
+               
         public bool IsPublic { get; set; } = true;
         
         public string? OwnerId { get; set; } // User ID of owner

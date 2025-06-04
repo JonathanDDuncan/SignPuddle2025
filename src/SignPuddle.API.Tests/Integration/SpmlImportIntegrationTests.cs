@@ -33,7 +33,6 @@ namespace SignPuddle.API.Tests.Integration
             var dictionary = await _spmlImportService.ConvertToDictionaryAsync(spmlDocument, "test-user-123");
             Assert.NotNull(dictionary);
             Assert.Equal("Dictionary US", dictionary.Name);
-            Assert.Equal("sgn", dictionary.Language);
             Assert.Equal("test-user-123", dictionary.OwnerId);
             Assert.Equal(new DateTime(2008, 2, 18, 22, 37, 12, DateTimeKind.Utc), dictionary.Created);
             Assert.Equal(new DateTime(2011, 7, 18, 21, 40, 53, DateTimeKind.Utc), dictionary.Updated);
