@@ -4,6 +4,8 @@ using SignPuddle.API.Data;
 using SignPuddle.API.Data.Repositories;
 using SignPuddle.API.Models;
 using SignPuddle.API.Services;
+using SignPuddle.API.Tests.Helpers; // Added
+using SignPuddle.API; // Added for Program
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +20,8 @@ namespace SignPuddle.API.Tests.Data.Repositories
     /// </summary>
     public class SpmlRepositoryTests : IDisposable
     {
+        private readonly ApiTestsWebApplicationFactory<Program> _factory; // Changed
+        private readonly IServiceScope _scope; // Added
         private readonly ApplicationDbContext _context;
         private readonly ISpmlRepository _repository;
         private readonly ISpmlImportService _spmlImportService;
@@ -25,17 +29,21 @@ namespace SignPuddle.API.Tests.Data.Repositories
 
         public SpmlRepositoryTests()
         {
-            // Setup in-memory database for testing
-            var services = new ServiceCollection();
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()));
+            _factory = new ApiTestsWebApplicationFactory<Program>();
+            _scope = _factory.Services.CreateScope();
 
-            var serviceProvider = services.BuildServiceProvider();
-            _context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            _context = _scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            _repository = _scope.ServiceProvider.GetRequiredService<ISpmlRepository>();
+            _spmlImportService = _scope.ServiceProvider.GetRequiredService<ISpmlImportService>();
 
-            _repository = new SpmlRepository(_context);
-            _spmlImportService = new SpmlImportService();
             _testDataPath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "sgn4-small.spml");
+        }
+
+        public void Dispose()
+        {
+            _scope?.Dispose();
+            _factory?.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         [Fact]
@@ -399,11 +407,6 @@ namespace SignPuddle.API.Tests.Data.Repositories
 
             // Assert
             Assert.Null(result);
-        }
-
-        public void Dispose()
-        {
-            _context.Dispose();
         }
     }
 }

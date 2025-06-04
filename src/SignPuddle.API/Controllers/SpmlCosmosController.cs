@@ -29,7 +29,7 @@ namespace SignPuddle.API.Controllers
         /// <param name="tags">Optional comma-separated tags for categorization</param>
         /// <returns>Import result with CosmosDB document information</returns>
         [HttpPost("import")]
-        public async Task<ActionResult> ImportSpml(
+        public async Task<ActionResult<SpmlImportToCosmosResult>> ImportSpml( // Return type changed
             [Required] IFormFile file,
             [FromQuery] string? ownerId = null,
             [FromQuery] string? description = null,
@@ -88,7 +88,8 @@ namespace SignPuddle.API.Controllers
                 return StatusCode(500, new SpmlImportToCosmosResult
                 {
                     Success = false,
-                    Message = $"Internal server error: {ex.Message}"
+                    Message = $"Internal server error: {ex.Message}",
+                    ErrorMessage = ex.Message // Changed from Error = ex
                 });
             }
         }
@@ -103,13 +104,13 @@ namespace SignPuddle.API.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return BadRequest("Document ID is required");
+                return BadRequest(new ProblemDetails { Title = "Document ID is required", Status = StatusCodes.Status400BadRequest });
             }
 
             var document = await _spmlPersistenceService.GetSpmlDocumentAsync(id);
             if (document == null)
             {
-                return NotFound($"SPML document with ID '{id}' not found");
+                return NotFound(new ProblemDetails { Title = $"SPML document with ID '{id}' not found", Status = StatusCodes.Status404NotFound });
             }
 
             return Ok(document);
@@ -136,7 +137,7 @@ namespace SignPuddle.API.Controllers
         {
             if (string.IsNullOrEmpty(ownerId))
             {
-                return BadRequest("Owner ID is required");
+                return BadRequest(new ProblemDetails { Title = "Owner ID is required", Status = StatusCodes.Status400BadRequest });
             }
 
             var documents = await _spmlPersistenceService.GetSpmlDocumentsByOwnerAsync(ownerId);
@@ -152,13 +153,13 @@ namespace SignPuddle.API.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return BadRequest("Document ID is required");
+                return BadRequest(new ProblemDetails { Title = "Document ID is required", Status = StatusCodes.Status400BadRequest });
             }
 
             var xmlContent = await _spmlPersistenceService.ExportSpmlDocumentAsXmlAsync(id);
             if (xmlContent == null)
             {
-                return NotFound($"SPML document with ID '{id}' not found");
+                return NotFound(new ProblemDetails { Title = $"SPML document with ID '{id}' not found", Status = StatusCodes.Status404NotFound });
             }
 
             var fileName = $"spml_export_{id}_{DateTime.UtcNow:yyyyMMdd_HHmmss}.spml";
@@ -173,13 +174,13 @@ namespace SignPuddle.API.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return BadRequest("Document ID is required");
+                return BadRequest(new ProblemDetails { Title = "Document ID is required", Status = StatusCodes.Status400BadRequest });
             }
 
             var document = await _spmlPersistenceService.GetSpmlDocumentAsync(id);
             if (document == null)
             {
-                return NotFound($"SPML document with ID '{id}' not found");
+                return NotFound(new ProblemDetails { Title = $"SPML document with ID '{id}' not found", Status = StatusCodes.Status404NotFound });
             }
 
             try
@@ -189,7 +190,12 @@ namespace SignPuddle.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Failed to convert SPML document: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails 
+                { 
+                    Title = "Failed to convert SPML document", 
+                    Detail = ex.Message, 
+                    Status = StatusCodes.Status500InternalServerError 
+                });
             }
         }
           /// <summary>
@@ -202,7 +208,7 @@ namespace SignPuddle.API.Controllers
         {
             if (document == null)
             {
-                return BadRequest("Document cannot be null");
+                return BadRequest(new ProblemDetails { Title = "Document cannot be null", Status = StatusCodes.Status400BadRequest });
             }
 
             try
@@ -212,7 +218,12 @@ namespace SignPuddle.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Failed to convert SPML document: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails 
+                { 
+                    Title = "Failed to convert SPML document", 
+                    Detail = ex.Message, 
+                    Status = StatusCodes.Status500InternalServerError 
+                });
             }
         }
 
@@ -226,13 +237,13 @@ namespace SignPuddle.API.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return BadRequest("Document ID is required");
+                return BadRequest(new ProblemDetails { Title = "Document ID is required", Status = StatusCodes.Status400BadRequest });
             }
 
             var success = await _spmlPersistenceService.DeleteSpmlDocumentAsync(id);
             if (!success)
             {
-                return NotFound($"SPML document with ID '{id}' not found");
+                return NotFound(new ProblemDetails { Title = $"SPML document with ID '{id}' not found", Status = StatusCodes.Status404NotFound });
             }
 
             return Ok(new { Message = $"SPML document '{id}' deleted successfully" });

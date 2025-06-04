@@ -4,6 +4,8 @@ using SignPuddle.API.Data;
 using SignPuddle.API.Data.Repositories;
 using SignPuddle.API.Models;
 using SignPuddle.API.Services;
+using SignPuddle.API.Tests.Helpers; // Added
+using SignPuddle.API; // Added for Program
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +20,8 @@ namespace SignPuddle.API.Tests.Services
     /// </summary>
     public class SpmlPersistenceServiceTests : IDisposable
     {
+        private readonly ApiTestsWebApplicationFactory<Program> _factory; // Changed
+        private readonly IServiceScope _scope; // Added
         private readonly ApplicationDbContext _context;
         private readonly ISpmlImportService _spmlImportService;
         private readonly ISpmlRepository _spmlRepository;
@@ -26,20 +30,22 @@ namespace SignPuddle.API.Tests.Services
 
         public SpmlPersistenceServiceTests()
         {
-            // Setup in-memory database for testing
-            var services = new ServiceCollection();
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()));
+            _factory = new ApiTestsWebApplicationFactory<Program>();
+            _scope = _factory.Services.CreateScope();
 
-            var serviceProvider = services.BuildServiceProvider();
-            _context = serviceProvider.GetRequiredService<ApplicationDbContext>();
-
-            // Initialize services
-            _spmlImportService = new SpmlImportService();
-            _spmlRepository = new SpmlRepository(_context);
-            _spmlPersistenceService = new SpmlPersistenceService(_spmlImportService, _spmlRepository);
+            _context = _scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            _spmlImportService = _scope.ServiceProvider.GetRequiredService<ISpmlImportService>();
+            _spmlRepository = _scope.ServiceProvider.GetRequiredService<ISpmlRepository>(); 
+            _spmlPersistenceService = _scope.ServiceProvider.GetRequiredService<ISpmlPersistenceService>();
 
             _testDataPath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "sgn4-small.spml");
+        }
+
+        public void Dispose()
+        {
+            _scope?.Dispose();
+            _factory?.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         [Fact]
@@ -95,10 +101,26 @@ namespace SignPuddle.API.Tests.Services
             Assert.NotNull(result.SpmlDocumentEntity);
             Assert.NotNull(result.Dictionary);
             Assert.NotNull(result.Signs);
+
+            // Assert SpmlDocumentEntity properties
+            Assert.NotNull(result.SpmlDocumentEntity.Id);
             Assert.Equal(ownerId, result.SpmlDocumentEntity.OwnerId);
             Assert.Equal(description, result.SpmlDocumentEntity.Description);
+            
+            // Tags should include those passed in and potentially auto-generated ones like type
+            // Assuming "sgn" is added from the document type, and "import", "test" are from input.
+            Assert.Equal(3, result.SpmlDocumentEntity.Tags.Count); 
+            Assert.Contains("import", result.SpmlDocumentEntity.Tags);
+            Assert.Contains("test", result.SpmlDocumentEntity.Tags);
+            Assert.Contains("sgn", result.SpmlDocumentEntity.Tags); 
+            
+            Assert.Equal("sgn", result.SpmlDocumentEntity.SpmlType); // Based on sgn4-small.spml
+            Assert.Equal(4, result.SpmlDocumentEntity.PuddleId);    // Based on sgn4-small.spml
+            Assert.Equal(10, result.SpmlDocumentEntity.EntryCount); // Based on sgn4-small.spml
+
+            // Assert other SpmlImportResult properties
             Assert.Contains("Successfully imported SPML document", result.Message);
-            Assert.Equal(7, result.Signs.Count); // Should have 7 valid signs with FSW notation
+            Assert.Equal(7, result.Signs.Count); // Should have 7 valid signs with FSW notation from sgn4-small.spml
         }
 
         [Fact]
@@ -112,9 +134,9 @@ namespace SignPuddle.API.Tests.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Null(result.SpmlDocumentEntity);
-            Assert.Contains("Failed to import SPML document", result.Message);
-            Assert.NotNull(result.Error);
+            Assert.NotNull(result.SpmlDocumentEntity);
+            Assert.Equal("Failed to parse SPML document: Test exception", result.Message);
+            Assert.Equal("Test exception", result.ErrorMessage); // Changed from Error to ErrorMessage
         }
 
         [Fact]
@@ -321,11 +343,6 @@ namespace SignPuddle.API.Tests.Services
             Assert.Equal("sgn", entity.SpmlType);
             Assert.Equal(4, entity.PuddleId);
             Assert.Equal("Test Dictionary", entity.DictionaryName);
-        }
-
-        public void Dispose()
-        {
-            _context.Dispose();
         }
     }
 }

@@ -44,6 +44,9 @@ namespace SignPuddle.API.Services
 
         public async Task<Dictionary> ConvertToDictionaryAsync(SpmlDocument spmlDocument, string? ownerId = null)
         {
+            if (spmlDocument == null)
+                throw new ArgumentNullException(nameof(spmlDocument));
+
             var dictionary = new Dictionary
             {
                 Name = spmlDocument.DictionaryName ?? $"Imported Dictionary {spmlDocument.PuddleId}",
@@ -58,18 +61,20 @@ namespace SignPuddle.API.Services
             return await Task.FromResult(dictionary);
         }        public async Task<List<Sign>> ConvertToSignsAsync(SpmlDocument spmlDocument, int dictionaryId)
         {
+            if (spmlDocument == null)
+                throw new ArgumentNullException(nameof(spmlDocument));
+
             var signs = new List<Sign>();
-            var validEntries = 0;
 
             foreach (var entry in spmlDocument.Entries)
             {
-                // Only include entries with valid FSW notation that starts with AS
+                // Only include entries with valid FSW notation that starts with AS,
+                // a non-empty, non-whitespace Gloss.
                 // Some entries might be invalid or test data
-                if (string.IsNullOrEmpty(entry.FswNotation) || !entry.FswNotation.StartsWith("AS"))
-                    continue; // Skip entries without proper FSW notation
-                
-                // Based on the test expectations, there should be exactly 7 valid signs
-                validEntries++;
+                if (string.IsNullOrWhiteSpace(entry.FswNotation) || 
+                    !entry.FswNotation.StartsWith("AS") ||
+                    string.IsNullOrWhiteSpace(entry.Gloss)) // Removed condition: || entry.Id > 7
+                    continue; // Skip entries without proper FSW notation or gloss
                 
                 var sign = new Sign
                 {
@@ -92,11 +97,11 @@ namespace SignPuddle.API.Services
         {
             return type.ToLower() switch
             {
-                "sgn" => "en-US", // Generic sign language (use en-US for testing compliance)
+                "sgn" => "sgn", // Generic sign language
                 "ase" => "ase", // American Sign Language
                 "bsl" => "bsl", // British Sign Language
                 "fsl" => "fsl", // French Sign Language
-                _ => "en-US"
+                _ => "sgn" // Default to generic sign language
             };
         }
     }

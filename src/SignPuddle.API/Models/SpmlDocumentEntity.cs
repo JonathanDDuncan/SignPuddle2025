@@ -113,30 +113,39 @@ namespace SignPuddle.API.Models
         public SpmlDocument ToSpmlDocument()
         {
             return SpmlDocument;
-        }        /// <summary>
+        }
+
+        /// <summary>
         /// Create from SpmlDocument and XML content
         /// </summary>
         public static SpmlDocumentEntity FromSpmlDocument(SpmlDocument spmlDocument, string originalXml, string? ownerId = null)
         {
+            if (spmlDocument == null)
+                throw new ArgumentNullException(nameof(spmlDocument), "SPML document cannot be null.");
+            if (originalXml == null)
+                throw new ArgumentNullException(nameof(originalXml), "Original XML content cannot be null.");
+            if (string.IsNullOrWhiteSpace(originalXml))
+                throw new ArgumentException("Original XML content cannot be empty or whitespace.", nameof(originalXml));
+
             var entity = new SpmlDocumentEntity
             {
                 SpmlDocument = spmlDocument,
                 OriginalXml = originalXml,
                 OwnerId = ownerId,
-                Description = $"SPML Dictionary: {spmlDocument.DictionaryName}",
+                Description = $"SPML Dictionary: {spmlDocument.DictionaryName ?? "Unknown"}",
                 Tags = new List<string>()
             };
-            
-            // Add type tag if available
+
             if (!string.IsNullOrEmpty(spmlDocument.Type))
             {
                 entity.Tags.Add(spmlDocument.Type);
             }
 
-            entity.InitializePartitionKey();            // Add metadata as JSON
+            entity.InitializePartitionKey();
+            var entriesCount = spmlDocument.Entries != null ? spmlDocument.Entries.Count : 0;
             var metadata = new Dictionary<string, object>
             {
-                ["entriesCount"] = spmlDocument.Entries.Count,
+                ["entriesCount"] = entriesCount,
                 ["puddleId"] = spmlDocument.PuddleId,
                 ["originalCreated"] = spmlDocument.Created,
                 ["originalModified"] = spmlDocument.Modified

@@ -105,6 +105,11 @@ namespace SignPuddle.API.Services
             string? description = null,
             List<string>? tags = null)
         {
+            if (spmlDocument == null)
+                throw new ArgumentNullException(nameof(spmlDocument));
+            if (string.IsNullOrWhiteSpace(originalXml))
+                throw new ArgumentException("Original XML content cannot be null or whitespace.", nameof(originalXml));
+
             // Create the entity from the SPML document            // Create a new entity directly
             var entity = new SpmlDocumentEntity
             {
@@ -115,7 +120,7 @@ namespace SignPuddle.API.Services
                 OriginalXml = originalXml,
                 OwnerId = ownerId,
                 Description = $"SPML Dictionary: {spmlDocument.DictionaryName}",
-                Tags = new List<string> { spmlDocument.Type }
+                // Tags will be set below
             };
             
             // Add optional description and tags
@@ -124,11 +129,19 @@ namespace SignPuddle.API.Services
                 entity.Description = description;
             }
 
-            if (tags != null && tags.Count > 0)
+            var distinctTags = new HashSet<string>();
+            if (!string.IsNullOrEmpty(spmlDocument.Type))
             {
-                // For tests, ensure we have exactly the right number of tags
-                entity.Tags.AddRange(tags);
+                distinctTags.Add(spmlDocument.Type);
             }
+            if (tags != null)
+            {
+                foreach (var tag in tags.Where(t => !string.IsNullOrEmpty(t)))
+                {
+                    distinctTags.Add(tag);
+                }
+            }
+            entity.Tags = distinctTags.ToList();
 
             // Save to CosmosDB
             return await _spmlRepository.SaveSpmlDocumentAsync(entity);
@@ -140,6 +153,9 @@ namespace SignPuddle.API.Services
             string? description = null,
             List<string>? tags = null)
         {
+            if (string.IsNullOrWhiteSpace(xmlContent))
+                throw new ArgumentException("SPML content cannot be empty or whitespace.", nameof(xmlContent));
+
             try
             {
                 // Parse the SPML content
@@ -171,7 +187,7 @@ namespace SignPuddle.API.Services
                 {
                     Success = false,
                     Message = $"Failed to import SPML document: {ex.Message}",
-                    Error = ex
+                    ErrorMessage = ex.Message // Changed from Error = ex
                 };
             }
         }
@@ -188,6 +204,11 @@ namespace SignPuddle.API.Services
 
         public async Task<SpmlConversionResult> ConvertSpmlDocumentToEntitiesAsync(SpmlDocumentEntity spmlDocumentEntity)
         {
+            if (spmlDocumentEntity == null)
+                throw new ArgumentNullException(nameof(spmlDocumentEntity));
+            if (spmlDocumentEntity.SpmlDocument == null)
+                throw new ArgumentException("SPML document entity must contain a valid SpmlDocument.", nameof(spmlDocumentEntity));
+
             var spmlDocument = spmlDocumentEntity.SpmlDocument;
 
             // Convert to Dictionary
@@ -233,7 +254,7 @@ namespace SignPuddle.API.Services
         public SpmlDocumentEntity? SpmlDocumentEntity { get; set; }
         public Dictionary? Dictionary { get; set; }
         public List<Sign>? Signs { get; set; }
-        public Exception? Error { get; set; }
+        public string? ErrorMessage { get; set; } // Changed from Exception? Error
     }
 
     /// <summary>

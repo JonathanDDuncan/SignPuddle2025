@@ -21,6 +21,9 @@ namespace SignPuddle.API.Data.Repositories
 
         public async Task<SpmlDocumentEntity> SaveSpmlDocumentAsync(SpmlDocumentEntity spmlDocument)
         {
+            if (spmlDocument == null)
+                throw new ArgumentNullException(nameof(spmlDocument));
+
             // Ensure partition key is set
             spmlDocument.InitializePartitionKey();
             spmlDocument.SavedAt = DateTime.UtcNow;
@@ -37,6 +40,9 @@ namespace SignPuddle.API.Data.Repositories
         /// </summary>
         public async Task<SpmlDocumentEntity> SaveAsync(SpmlDocumentEntity entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
             return await SaveSpmlDocumentAsync(entity);
         }
 
@@ -55,22 +61,30 @@ namespace SignPuddle.API.Data.Repositories
 
         public async Task<IEnumerable<SpmlDocumentEntity>> GetSpmlDocumentsByTypeAsync(string type)
         {
+            // Using PartitionKey for filtering by type, assuming PartitionKey is set based on SpmlDocument.Type
             return await _context.SpmlDocuments
-                .Where(d => d.SpmlDocument.Type == type)
+                .Where(d => d.PartitionKey == type) // Changed to use PartitionKey
                 .OrderByDescending(d => d.SavedAt)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<SpmlDocumentEntity>> GetSpmlDocumentsByPuddleIdAsync(int puddleId)
         {
-            return await _context.SpmlDocuments
-                .Where(d => d.SpmlDocument.PuddleId == puddleId)
+            // EF Core might struggle with s.SpmlDocument.PuddleId.
+            // Fetching all and filtering in memory as a workaround.
+            // This is not ideal for performance with large datasets.
+            // Consider adding a mapped PuddleId property to SpmlDocumentEntity if this is a common query.
+            var allDocuments = await _context.SpmlDocuments
                 .OrderByDescending(d => d.SavedAt)
                 .ToListAsync();
+            return allDocuments.Where(d => d.SpmlDocument.PuddleId == puddleId);
         }
 
         public async Task<SpmlDocumentEntity?> UpdateSpmlDocumentAsync(SpmlDocumentEntity spmlDocument)
         {
+            if (spmlDocument == null)
+                throw new ArgumentNullException(nameof(spmlDocument));
+
             var existingDocument = await GetSpmlDocumentByIdAsync(spmlDocument.Id);
             if (existingDocument == null)
             {

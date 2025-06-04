@@ -22,7 +22,8 @@ builder.Services.AddControllers(options =>
     var jsonOptions = new JsonSerializerOptions
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        TypeInfoResolver = new DefaultJsonTypeInfoResolver()
+        TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
+        ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve // Add this line
     };
 
     options.OutputFormatters.Add(new SystemTextJsonOutputFormatter(jsonOptions));
@@ -36,54 +37,62 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 string CosmosConnectionString() => builder.Configuration.GetConnectionString("CosmosDb") ?? string.Empty;
 string DatabaseName() => builder.Configuration["CosmosDb:DatabaseName"] ?? "SignPuddle";
 
-// Register CosmosDB client
-builder.Services.AddSingleton(serviceProvider =>
+if (!builder.Environment.IsEnvironment("Testing"))
 {
-    return new CosmosClient(CosmosConnectionString());
-});
-
-// Configure DbContext for CosmosDB
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseCosmos(
-        connectionString: CosmosConnectionString(),
-        databaseName: DatabaseName(),
-        cosmosOptionsAction: options =>
-        {
-            options.ConnectionMode(ConnectionMode.Direct);
-            options.MaxRequestsPerTcpConnection(20);
-            options.MaxTcpConnectionsPerEndpoint(32);
-        }
-    ));
-
-// Add health checks
-builder.Services.AddHealthChecks()
-    .AddCheck("cosmosdb-check", () =>
+    // Register CosmosDB client
+    builder.Services.AddSingleton(serviceProvider =>
     {
-        try
-        {
-            HealthCheckResult? result = null;
-            Task.Run(async () =>
-            {
-                var client = new CosmosClient(CosmosConnectionString());
-                // Use async/await to avoid deadlocks and improve performance
-                await client.ReadAccountAsync();
-                result = HealthCheckResult.Healthy("CosmosDB connection is healthy");
-            }).Wait();
+        return new CosmosClient(CosmosConnectionString());
+    });
 
-            if (result != null)
+    // Configure DbContext for CosmosDB
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseCosmos(
+            connectionString: CosmosConnectionString(),
+            databaseName: DatabaseName(),
+            cosmosOptionsAction: options =>
             {
-                return (HealthCheckResult)result;
+                options.ConnectionMode(ConnectionMode.Direct);
+                options.MaxRequestsPerTcpConnection(20);
+                options.MaxTcpConnectionsPerEndpoint(32);
             }
-            else
-            {
-                return HealthCheckResult.Unhealthy("CosmosDB health check did not complete successfully");
-            }
-        }
-        catch (Exception ex)
+        ));
+
+    // Add health checks for CosmosDB
+    builder.Services.AddHealthChecks()
+        .AddCheck("cosmosdb-check", () =>
         {
-            return HealthCheckResult.Unhealthy("CosmosDB connection failed", ex);
-        }
-    }, new[] { "cosmosdb", "database" });
+            try
+            {
+                HealthCheckResult? result = null;
+                Task.Run(async () =>
+                {
+                    var client = new CosmosClient(CosmosConnectionString());
+                    // Use async/await to avoid deadlocks and improve performance
+                    await client.ReadAccountAsync();
+                    result = HealthCheckResult.Healthy("CosmosDB connection is healthy");
+                }).Wait();
+
+                if (result != null)
+                {
+                    return (HealthCheckResult)result;
+                }
+                else
+                {
+                    return HealthCheckResult.Unhealthy("CosmosDB health check did not complete successfully");
+                }
+            }
+            catch (Exception ex)
+            {
+                return HealthCheckResult.Unhealthy("CosmosDB connection failed", ex);
+            }
+        }, new[] { "cosmosdb", "database" });
+}
+else
+{
+    // Add a basic health check for the testing environment to satisfy MapHealthChecks
+    builder.Services.AddHealthChecks();
+}
 
 builder.Services.AddProblemDetails();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -134,13 +143,19 @@ app.UseExceptionHandler("/error");
 
 app.Map("/error", (HttpContext context) =>
 {
-    var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
-    return Results.Json(new
+    var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
+    var exception = exceptionHandlerFeature?.Error;
+
+    // Ensure only specific, safe properties are serialized
+    var errorResponse = new
     {
-        error = exception?.Message,
-        type = exception?.GetType().Name,
-        stack = exception?.StackTrace
-    });
+        Message = exception?.Message,
+        Type = exception?.GetType().ToString(), // Use ToString() for type name
+        StackTraceString = exception?.StackTrace // StackTrace is already a string
+    };
+    // It's good practice to return a proper status code for errors.
+    // Results.Json by default might return 200 if not specified.
+    return Results.Json(errorResponse, statusCode: Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError);
 });
 
 // Configure health checks

@@ -2,6 +2,23 @@ using System.Xml.Serialization;
 
 namespace SignPuddle.API.Models
 {
+    public class SpmlMeta
+    {
+        // Meta attributes
+        [XmlAttribute("name")]
+        public string? Name { get; set; }
+
+        [XmlAttribute("value")]
+        public string? Value { get; set; }
+
+        [XmlAttribute("lang")]
+        public string? Language { get; set; }
+
+        // Title property for backward compatibility
+        [XmlIgnore]
+        public string? Title => Name?.ToLower() == "title" ? Value : null;
+    }
+
     /// <summary>
     /// SPML Document root element - fully compliant with spml_1.6.dtd
     /// DTD: <!ELEMENT spml (term*,text*,png?,svg?,src*,entry*)>
@@ -50,8 +67,12 @@ namespace SignPuddle.API.Models
         [XmlElement("entry")]
         public List<SpmlEntry> Entries { get; set; } = new List<SpmlEntry>();
 
+        [XmlElement("meta")]
+        public List<SpmlMeta> Meta { get; set; } = new List<SpmlMeta>();
+
         // Helper properties for backward compatibility
-        public string? DictionaryName => Terms.FirstOrDefault();
+        [XmlIgnore]
+        public string? DictionaryName => Meta?.FirstOrDefault(m => string.Equals(m.Name, "title", StringComparison.OrdinalIgnoreCase))?.Value ?? Terms.FirstOrDefault();
         public string? Text => TextElements.FirstOrDefault();
         public DateTime Created => DateTimeOffset.FromUnixTimeSeconds(CreatedTimestamp).UtcDateTime;
         public DateTime Modified => DateTimeOffset.FromUnixTimeSeconds(ModifiedTimestamp).UtcDateTime;
@@ -117,5 +138,34 @@ namespace SignPuddle.API.Models
         // Backward compatibility properties
         public string? Text => TextElements.FirstOrDefault();
         public string? Source => Sources.FirstOrDefault();
+    }
+
+    public class SpmlPuddleInfo
+    {
+        // Puddle attributes
+        [XmlAttribute("id")]
+        public int Id { get; set; }
+
+        [XmlAttribute("name")]
+        public string? Name { get; set; }
+
+        [XmlAttribute("type")]
+        public string? Type { get; set; }
+
+        [XmlAttribute("lang")]
+        public string? Language { get; set; }
+
+        [XmlAttribute("owner")]
+        public string? Owner { get; set; }
+
+        [XmlAttribute("cdt")]
+        public long CreatedTimestamp { get; set; }
+
+        [XmlAttribute("mdt")]
+        public long ModifiedTimestamp { get; set; }
+
+        // Helper properties
+        public DateTime Created => DateTimeOffset.FromUnixTimeSeconds(CreatedTimestamp).UtcDateTime;
+        public DateTime Modified => DateTimeOffset.FromUnixTimeSeconds(ModifiedTimestamp).UtcDateTime;
     }
 }

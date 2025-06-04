@@ -1,0 +1,150 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  SignPuddle.API -> C:\Code\SignWriting\SignPuddle\src\SignPuddle.API\bin\Debug\net9.0\SignPuddle.API.dll
+  SignPuddle.API.Tests -> C:\Code\SignWriting\SignPuddle\src\SignPuddle.API.Tests\bin\Debug\net9.0\SignPuddle.API.Tests.dll
+Test run for C:\Code\SignWriting\SignPuddle\src\SignPuddle.API.Tests\bin\Debug\net9.0\SignPuddle.API.Tests.dll (.NETCoreApp,Version=v9.0)
+VSTest version 17.12.0 (x64)
+
+The following Tests are available:
+    UserServiceTests.HelloWorldTest
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ParseSpmlFromFileAsync_WithValidFile_ShouldReturnSpmlDocument
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ParseSpmlFromFileAsync_WithNonExistentFile_ShouldThrowFileNotFoundException
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ParseSpmlAsync_WithValidXml_ShouldParseCorrectly
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ParseSpmlAsync_ShouldParseAllEntries
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ParseSpmlAsync_ShouldExtractFswAndGlossCorrectly
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToDictionaryAsync_ShouldCreateValidDictionary
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToDictionaryAsync_WithNullOwner_ShouldCreateDictionaryWithoutOwner
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToSignsAsync_ShouldCreateValidSigns
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToSignsAsync_ShouldSkipEntriesWithoutFsw
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToDictionaryAsync_ShouldMapLanguageCorrectly(inputType: "sgn", expectedLanguage: "sgn")
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToDictionaryAsync_ShouldMapLanguageCorrectly(inputType: "ase", expectedLanguage: "ase")
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToDictionaryAsync_ShouldMapLanguageCorrectly(inputType: "bsl", expectedLanguage: "bsl")
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToDictionaryAsync_ShouldMapLanguageCorrectly(inputType: "fsl", expectedLanguage: "fsl")
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ConvertToDictionaryAsync_ShouldMapLanguageCorrectly(inputType: "unknown", expectedLanguage: "sgn")
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.ParseSpmlAsync_WithComplexEntry_ShouldParseAllFields
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.SpmlDocument_TimestampConversion_ShouldWorkCorrectly
+    SignPuddle.API.Tests.Services.SpmlImportServiceTests.SpmlEntry_TimestampConversion_ShouldWorkCorrectly
+    SignPuddle.API.Tests.Services.SpmlPersistenceServiceTests.SaveSpmlDocumentAsync_WithValidDocument_ShouldSaveSuccessfully
+    SignPuddle.API.Tests.Services.SpmlPersistenceServiceTests.ImportAndSaveSpmlAsync_WithValidXml_ShouldReturnSuccessResult
+    SignPuddle.API.Tests.Services.SpmlPersistenceServiceTests.ImportAndSaveSpmlAsync_WithInvalidXml_ShouldReturnFailureResult
+    SignPuddle.API.Tests.Services.SpmlPersistenceServiceTests.GetSpmlDocumentAsync_WithExistingId_ShouldReturnDocument
+    SignPuddle.API.Tests.Services.SpmlPersistenceServiceTests.GetSpmlDocumentAsync_WithNonExistentId_ShouldReturnNull
+    SignPuddle.API.Tests.Services.SpmlPersistenceServiceTests.ExportSpmlDocumentAsXmlAsync_WithExistingDocument_ShouldReturnXml
+    SignPuddle.API.Tests.Services.SpmlPersistenceServiceTests.ConvertSpmlDocumentToEntitiesAsync_ShouldReturnValidConversion
+    SignPuddle.API.Tests.Services.SpmlPersistenceServiceTests.GetAllSpmlDocumentsAsync_WithMultipleDocuments_ShouldReturnAll
+    SignPuddle.API.Tests.Services.SpmlPersistenceServiceTests.GetSpmlDocumentsByOwnerAsync_ShouldReturnOnlyOwnerDocuments
+    SignPuddle.API.Tests.Services.SpmlPersistenceServiceTests.DeleteSpmlDocumentAsync_WithExistingDocument_ShouldReturnTrue
+    SignPuddle.API.Tests.Services.SpmlPersistenceServiceTests.DeleteSpmlDocumentAsync_WithNonExistentDocument_ShouldReturnFalse
+    SignPuddle.API.Tests.Services.SpmlPersistenceServiceTests.GetSpmlDocumentStatsAsync_WithDocuments_ShouldReturnCorrectStats
+    SignPuddle.API.Tests.Services.SpmlPersistenceServiceTests.SpmlDocumentEntity_FromSpmlDocument_ShouldCreateValidEntity
+    SignPuddle.API.Tests.Performance.SpmlPerformanceTests.ImportLargeSpmlDocument_ShouldCompleteWithinReasonableTime
+    SignPuddle.API.Tests.Performance.SpmlPerformanceTests.BulkImport_MultipleDictionaries_ShouldScaleWell
+    SignPuddle.API.Tests.Performance.SpmlPerformanceTests.QueryPerformance_GetById_ShouldBeEfficient
+    SignPuddle.API.Tests.Performance.SpmlPerformanceTests.QueryPerformance_GetByType_ShouldScaleWithDocumentCount
+    SignPuddle.API.Tests.Performance.SpmlPerformanceTests.QueryPerformance_GetByOwner_ShouldBeEfficient
+    SignPuddle.API.Tests.Performance.SpmlPerformanceTests.ExportPerformance_LargeDocument_ShouldBeEfficient
+    SignPuddle.API.Tests.Performance.SpmlPerformanceTests.ConversionPerformance_SpmlToEntities_ShouldBeEfficient
+    SignPuddle.API.Tests.Performance.SpmlPerformanceTests.StatsPerformance_WithManyDocuments_ShouldBeEfficient
+    SignPuddle.API.Tests.Performance.SpmlPerformanceTests.DeletePerformance_MultipleDocuments_ShouldBeEfficient
+    SignPuddle.API.Tests.Performance.SpmlPerformanceTests.MemoryUsage_BulkOperations_ShouldNotExceedLimits
+    SignPuddle.API.Tests.Performance.SpmlPerformanceTests.ConcurrentImports_ShouldHandleParallelOperations(concurrentCount: 1)
+    SignPuddle.API.Tests.Performance.SpmlPerformanceTests.ConcurrentImports_ShouldHandleParallelOperations(concurrentCount: 5)
+    SignPuddle.API.Tests.Performance.SpmlPerformanceTests.ConcurrentImports_ShouldHandleParallelOperations(concurrentCount: 10)
+    SignPuddle.API.Tests.Integration.SpmlCosmosIntegrationTests.ImportSpml_EndToEnd_ShouldWorkCorrectly
+    SignPuddle.API.Tests.Integration.SpmlCosmosIntegrationTests.GetSpmlDocument_AfterImport_ShouldReturnDocument
+    SignPuddle.API.Tests.Integration.SpmlCosmosIntegrationTests.ExportSpmlDocument_AfterImport_ShouldReturnXml
+    SignPuddle.API.Tests.Integration.SpmlCosmosIntegrationTests.ConvertToEntities_AfterImport_ShouldReturnConversion
+    SignPuddle.API.Tests.Integration.SpmlCosmosIntegrationTests.DeleteSpmlDocument_AfterImport_ShouldRemoveDocument
+    SignPuddle.API.Tests.Integration.SpmlCosmosIntegrationTests.GetStats_AfterMultipleImports_ShouldReturnCorrectStats
+    SignPuddle.API.Tests.Integration.SpmlCosmosIntegrationTests.ImportSpml_WithInvalidFile_ShouldReturnBadRequest
+    SignPuddle.API.Tests.Integration.SpmlCosmosIntegrationTests.GetSpmlDocument_WithNonExistentId_ShouldReturnNotFound
+    SignPuddle.API.Tests.Integration.SpmlCosmosIntegrationTests.ExportSpmlDocument_WithNonExistentId_ShouldReturnNotFound
+    SignPuddle.API.Tests.Integration.SpmlCosmosIntegrationTests.DeleteSpmlDocument_WithNonExistentId_ShouldReturnNotFound
+    SignPuddle.API.Tests.Integration.SpmlCosmosIntegrationTests.FullWorkflow_ImportExportConvertDelete_ShouldWorkEndToEnd
+    SignPuddle.API.Tests.Integration.SpmlImportIntegrationTests.FullImportWorkflow_ShouldImportSpmlToDictionaryAndSigns
+    SignPuddle.API.Tests.Integration.SpmlImportIntegrationTests.ImportStatistics_ShouldProvideCorrectCounts
+    SignPuddle.API.Tests.Integration.SpmlImportIntegrationTests.ImportPreservesUserAttribution_ShouldMaintainOriginalCreators
+    SignPuddle.API.Tests.Integration.SpmlImportIntegrationTests.ImportHandlesMixedContentCorrectly
+    SignPuddle.API.Tests.Integration.SpmlImportIntegrationTests.ImportMetadata_ShouldPreserveTimestamps
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ImportAndSaveSpmlAsync_WithInvalidXml_ShouldReturnFailure(invalidXml: null, expectedContainedMessage: "Value cannot be null. (Parameter 'spmlContent')")
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ImportAndSaveSpmlAsync_WithInvalidXml_ShouldReturnFailure(invalidXml: "", expectedContainedMessage: "SPML content cannot be empty or whitespace. (Param"···)
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ImportAndSaveSpmlAsync_WithInvalidXml_ShouldReturnFailure(invalidXml: "   ", expectedContainedMessage: "SPML content cannot be empty or whitespace. (Param"···)
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ImportAndSaveSpmlAsync_WithMalformedXml_ShouldReturnFailure
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ImportAndSaveSpmlAsync_WithNonSpmlXml_ShouldReturnFailure
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ImportAndSaveSpmlAsync_WithEmptySpml_ShouldHandleGracefully
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ImportAndSaveSpmlAsync_WithVeryLongContent_ShouldHandleGracefully
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ImportAndSaveSpmlAsync_WithSpecialCharacters_ShouldHandleGracefully
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.SaveSpmlDocumentAsync_WithNullDocument_ShouldThrowException
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.SaveSpmlDocumentAsync_WithNullXml_ShouldThrowException
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.GetSpmlDocumentAsync_WithInvalidId_ShouldReturnNull(invalidId: null)
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.GetSpmlDocumentAsync_WithInvalidId_ShouldReturnNull(invalidId: "")
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.GetSpmlDocumentAsync_WithInvalidId_ShouldReturnNull(invalidId: "   ")
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ExportSpmlDocumentAsXmlAsync_WithInvalidId_ShouldReturnNull(invalidId: null)
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ExportSpmlDocumentAsXmlAsync_WithInvalidId_ShouldReturnNull(invalidId: "")
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ExportSpmlDocumentAsXmlAsync_WithInvalidId_ShouldReturnNull(invalidId: "   ")
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.DeleteSpmlDocumentAsync_WithInvalidId_ShouldReturnFalse(invalidId: null)
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.DeleteSpmlDocumentAsync_WithInvalidId_ShouldReturnFalse(invalidId: "")
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.DeleteSpmlDocumentAsync_WithInvalidId_ShouldReturnFalse(invalidId: "   ")
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ConvertSpmlDocumentToEntitiesAsync_WithNullDocument_ShouldThrowException
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ConvertSpmlDocumentToEntitiesAsync_WithCorruptedDocument_ShouldHandleGracefully
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.Repository_DatabaseConnectionIssues_ShouldHandleGracefully
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ImportAndSaveSpmlAsync_WithDuplicateEntryIds_ShouldHandleGracefully
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ImportAndSaveSpmlAsync_WithMissingRequiredFields_ShouldHandleGracefully
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.Repository_LargeDataSets_ShouldNotCauseMemoryIssues
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ImportAndSaveSpmlAsync_ConcurrentOperations_ShouldNotCauseDataCorruption
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.SpmlDocumentEntity_FromSpmlDocument_WithNullInputs_ShouldHandleGracefully
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.SpmlDocumentEntity_FromSpmlDocument_WithEmptySpmlDocument_ShouldUseDefaults
+    SignPuddle.API.Tests.ErrorHandling.SpmlErrorHandlingTests.ExportAsXml_WithCorruptedDocument_ShouldHandleGracefully
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.SaveAsync_WithValidEntity_ShouldSaveSuccessfully
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.GetByIdAsync_WithExistingId_ShouldReturnEntity
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.GetByIdAsync_WithNonExistentId_ShouldReturnNull
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.GetAllAsync_WithMultipleEntities_ShouldReturnAll
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.GetByTypeAsync_ShouldReturnOnlyMatchingType
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.GetByPuddleIdAsync_ShouldReturnOnlyMatchingPuddleId
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.GetByOwnerAsync_ShouldReturnOnlyOwnerEntities
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.UpdateAsync_WithModifiedEntity_ShouldUpdateSuccessfully
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.DeleteAsync_WithExistingEntity_ShouldReturnTrue
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.DeleteAsync_WithNonExistentId_ShouldReturnFalse
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.ExportAsXmlAsync_WithValidEntity_ShouldReturnFormattedXml
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.ExportAsXmlAsync_WithNonExistentId_ShouldReturnNull
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.GetStatsAsync_WithMultipleEntities_ShouldReturnCorrectStats
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.GetStatsAsync_WithEmptyRepository_ShouldReturnZeroStats
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.SaveAsync_WithNullEntity_ShouldThrowArgumentNullException
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.UpdateAsync_WithNullEntity_ShouldThrowArgumentNullException
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.GetByIdAsync_WithInvalidId_ShouldReturnNull(invalidId: null)
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.GetByIdAsync_WithInvalidId_ShouldReturnNull(invalidId: "")
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.GetByIdAsync_WithInvalidId_ShouldReturnNull(invalidId: "   ")
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.DeleteAsync_WithInvalidId_ShouldReturnFalse(invalidId: null)
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.DeleteAsync_WithInvalidId_ShouldReturnFalse(invalidId: "")
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.DeleteAsync_WithInvalidId_ShouldReturnFalse(invalidId: "   ")
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.ExportAsXmlAsync_WithInvalidId_ShouldReturnNull(invalidId: null)
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.ExportAsXmlAsync_WithInvalidId_ShouldReturnNull(invalidId: "")
+    SignPuddle.API.Tests.Data.Repositories.SpmlRepositoryTests.ExportAsXmlAsync_WithInvalidId_ShouldReturnNull(invalidId: "   ")
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ImportSpml_WithValidFile_ShouldReturnOkResult
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ImportSpml_WithNullFile_ShouldReturnBadRequest
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ImportSpml_WithEmptyFile_ShouldReturnBadRequest
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ImportSpml_WithInvalidXml_ShouldReturnBadRequest
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.GetSpmlDocument_WithExistingId_ShouldReturnOkResult
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.GetSpmlDocument_WithNonExistentId_ShouldReturnNotFound
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ExportSpmlDocument_WithExistingId_ShouldReturnFileResult
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ExportSpmlDocument_WithNonExistentId_ShouldReturnNotFound
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ConvertToEntities_WithExistingDocument_ShouldReturnOkResult
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ConvertToEntities_WithNullDocument_ShouldReturnBadRequest
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.DeleteSpmlDocument_WithExistingId_ShouldReturnOkResult
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.DeleteSpmlDocument_WithNonExistentId_ShouldReturnNotFound
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.GetStats_WithDocuments_ShouldReturnOkResult
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.GetStats_WithEmptyRepository_ShouldReturnZeroStats
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ImportSpml_WithTagsString_ShouldParseTags
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ImportSpml_WithoutOptionalParameters_ShouldUseDefaults
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.GetSpmlDocument_WithInvalidId_ShouldReturnBadRequest(invalidId: null)
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.GetSpmlDocument_WithInvalidId_ShouldReturnBadRequest(invalidId: "")
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.GetSpmlDocument_WithInvalidId_ShouldReturnBadRequest(invalidId: "   ")
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ExportSpmlDocument_WithInvalidId_ShouldReturnBadRequest(invalidId: null)
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ExportSpmlDocument_WithInvalidId_ShouldReturnBadRequest(invalidId: "")
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ExportSpmlDocument_WithInvalidId_ShouldReturnBadRequest(invalidId: "   ")
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.DeleteSpmlDocument_WithInvalidId_ShouldReturnBadRequest(invalidId: null)
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.DeleteSpmlDocument_WithInvalidId_ShouldReturnBadRequest(invalidId: "")
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.DeleteSpmlDocument_WithInvalidId_ShouldReturnBadRequest(invalidId: "   ")
+    SignPuddle.API.Tests.Controllers.SpmlCosmosControllerTests.ImportSpml_ExceptionHandling_ShouldReturnInternalServerError_Or_BadRequestForServiceError
+
+Workload updates are available. Run `dotnet workload list` for more information.

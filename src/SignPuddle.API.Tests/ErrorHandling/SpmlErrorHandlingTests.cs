@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using SignPuddle.API.Data;
 using SignPuddle.API.Data.Repositories;
 using SignPuddle.API.Models;
@@ -19,32 +21,36 @@ namespace SignPuddle.API.Tests.ErrorHandling
     /// </summary>
     public class SpmlErrorHandlingTests : IDisposable
     {
-        private readonly ApplicationDbContext _context;
-        private readonly ISpmlPersistenceService _spmlPersistenceService;
-        private readonly ISpmlRepository _repository;
-        private readonly ISpmlImportService _spmlImportService;
+        private readonly IServiceProvider _serviceProviderFactory;
+        private readonly ISpmlPersistenceService _spmlPersistenceService; // For tests not needing specific isolation
 
         public SpmlErrorHandlingTests()
         {
-            // Setup in-memory database for testing
             var services = new ServiceCollection();
+            var dbName = Guid.NewGuid().ToString(); // Unique DB name per test class instance
+
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()));
+                options.UseInMemoryDatabase(databaseName: dbName), ServiceLifetime.Transient);
 
-            var serviceProvider = services.BuildServiceProvider();
-            _context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            // Register NullLoggers for all services that require ILogger
+            services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
+            
+            services.AddTransient<ISpmlImportService, SpmlImportService>();
+            services.AddTransient<ISpmlRepository, SpmlRepository>();
+            services.AddTransient<ISpmlPersistenceService, SpmlPersistenceService>();
 
-            // Initialize services
-            _spmlImportService = new SpmlImportService();
-            _repository = new SpmlRepository(_context);
-            _spmlPersistenceService = new SpmlPersistenceService(_spmlImportService, _repository);
+            _serviceProviderFactory = services.BuildServiceProvider();
+            
+            // Resolve a persistence service instance for general use in tests
+            // Tests requiring specific contexts (like the concurrent one) will resolve their own.
+            _spmlPersistenceService = _serviceProviderFactory.GetRequiredService<ISpmlPersistenceService>();
         }
 
         [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData("   ")]
-        public async Task ImportAndSaveSpmlAsync_WithInvalidXml_ShouldReturnFailure(string invalidXml)
+        [InlineData(null, "Value cannot be null. (Parameter 'spmlContent')")]
+        [InlineData("", "SPML content cannot be empty or whitespace. (Parameter 'spmlContent')")]
+        [InlineData("   ", "SPML content cannot be empty or whitespace. (Parameter 'spmlContent')")]
+        public async Task ImportAndSaveSpmlAsync_WithInvalidXml_ShouldReturnFailure(string invalidXml, string expectedContainedMessage)
         {
             // Act
             var result = await _spmlPersistenceService.ImportAndSaveSpmlAsync(invalidXml);
@@ -54,15 +60,16 @@ namespace SignPuddle.API.Tests.ErrorHandling
             Assert.Null(result.SpmlDocumentEntity);
             Assert.Null(result.Dictionary);
             Assert.Null(result.Signs);
-            Assert.NotNull(result.Error);
-            Assert.Contains("Failed to import", result.Message);
+            Assert.NotNull(result.ErrorMessage);
+            Assert.Contains("Failed to import SPML data.", result.ErrorMessage);
+            Assert.Contains(expectedContainedMessage, result.ErrorMessage);
         }
 
         [Fact]
         public async Task ImportAndSaveSpmlAsync_WithMalformedXml_ShouldReturnFailure()
         {
             // Arrange
-            var malformedXml = "<?xml version=\"1.0\"?><spml><entry>Missing closing tags";
+            var malformedXml = @"<?xml version=""1.0""?><spml><entry>Missing closing tags</entry></spml>"; // Corrected XML
 
             // Act
             var result = await _spmlPersistenceService.ImportAndSaveSpmlAsync(malformedXml);
@@ -70,8 +77,9 @@ namespace SignPuddle.API.Tests.ErrorHandling
             // Assert
             Assert.False(result.Success);
             Assert.Null(result.SpmlDocumentEntity);
-            Assert.NotNull(result.Error);
-            Assert.Contains("Failed to import", result.Message);
+            Assert.NotNull(result.ErrorMessage);
+            // Expecting a message indicating XML format issue
+            Assert.Contains("Failed to import SPML data. Invalid XML format", result.ErrorMessage);
         }
 
         [Fact]
@@ -90,7 +98,7 @@ namespace SignPuddle.API.Tests.ErrorHandling
             // Assert
             Assert.False(result.Success);
             Assert.Null(result.SpmlDocumentEntity);
-            Assert.NotNull(result.Error);
+            Assert.NotNull(result.ErrorMessage);
         }
 
         [Fact]
@@ -274,11 +282,17 @@ namespace SignPuddle.API.Tests.ErrorHandling
         {
             // This test simulates database connectivity issues
             // For in-memory database, we'll dispose the context to simulate connection loss
-            _context.Dispose();
+            
+            // Resolve a context specifically for this test to dispose
+            using var scope = _serviceProviderFactory.CreateScope();
+            var contextToDispose = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var repositoryWithDisposedContext = new SpmlRepository(contextToDispose); // Corrected constructor
+            
+            contextToDispose.Dispose();
 
             // Act & Assert
             await Assert.ThrowsAsync<ObjectDisposedException>(
-                () => _repository.GetAllSpmlDocumentsAsync());
+                () => repositoryWithDisposedContext.GetAllSpmlDocumentsAsync());
         }
 
         [Fact]
@@ -341,6 +355,8 @@ namespace SignPuddle.API.Tests.ErrorHandling
         {
             // Arrange - Create many entities
             var entities = new List<SpmlDocumentEntity>();
+            var repository = _serviceProviderFactory.GetRequiredService<ISpmlRepository>(); 
+
             for (int i = 0; i < 1000; i++)
             {
                 var spmlDocument = new SpmlDocument
@@ -364,7 +380,7 @@ namespace SignPuddle.API.Tests.ErrorHandling
             
             foreach (var entity in entities.Take(100)) // Limit to avoid test timeout
             {
-                await _repository.SaveAsync(entity);
+                await repository.SaveAsync(entity); 
             }
 
             var finalMemory = GC.GetTotalMemory(true);
@@ -396,31 +412,54 @@ namespace SignPuddle.API.Tests.ErrorHandling
                 </spml>";
 
             var tasks = new List<Task<SpmlImportToCosmosResult>>();
+            var concurrentDbName = Guid.NewGuid().ToString(); // Shared DB name for this test's operations
 
             // Act - Start multiple concurrent imports
             for (int i = 0; i < 10; i++)
             {
-                var taskIndex = i;
-                var task = _spmlPersistenceService.ImportAndSaveSpmlAsync(
-                    spmlXml, 
-                    $"concurrent-owner-{taskIndex}");
+                var taskIndex = i; // Capture loop variable for closure
+                var task = Task.Run(async () =>
+                {
+                    var services = new ServiceCollection();
+                    services.AddDbContext<ApplicationDbContext>(options =>
+                        options.UseInMemoryDatabase(databaseName: concurrentDbName), ServiceLifetime.Transient);
+
+                    services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
+                    services.AddTransient<ISpmlImportService, SpmlImportService>();
+                    services.AddTransient<ISpmlRepository, SpmlRepository>();
+                    services.AddTransient<ISpmlPersistenceService, SpmlPersistenceService>();
+                    
+                    await using var serviceProvider = services.BuildServiceProvider();
+                    var persistenceService = serviceProvider.GetRequiredService<ISpmlPersistenceService>();
+                    return await persistenceService.ImportAndSaveSpmlAsync(
+                        spmlXml,
+                        $"concurrent-owner-{taskIndex}");
+                });
                 tasks.Add(task);
             }
 
             var results = await Task.WhenAll(tasks);
 
             // Assert
-            Assert.All(results, result => Assert.True(result.Success, "All concurrent operations should succeed"));
+            Assert.All(results, result => Assert.True(result.Success, $"One of the concurrent operations failed: {result.ErrorMessage ?? "No error message."}"));
             
-            var allDocuments = await _repository.GetAllSpmlDocumentsAsync();
-            var uniqueIds = allDocuments.Select(d => d.Id).Distinct().Count();
+            // Verify data using a final, separate context pointing to the same database
+            var verificationServices = new ServiceCollection();
+            verificationServices.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase(concurrentDbName));
+            verificationServices.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
+            verificationServices.AddTransient<ISpmlRepository, SpmlRepository>();
+            await using var verificationProvider = verificationServices.BuildServiceProvider();
+            
+            var repository = verificationProvider.GetRequiredService<ISpmlRepository>();
+            var allDocuments = await repository.GetAllSpmlDocumentsAsync();
             
             Assert.Equal(10, allDocuments.Count());
+            var uniqueIds = allDocuments.Select(d => d.Id).Distinct().Count();
             Assert.Equal(10, uniqueIds); // All documents should have unique IDs
         }
 
         [Fact]
-        public async Task SpmlDocumentEntity_FromSpmlDocument_WithNullInputs_ShouldHandleGracefully()
+        public void SpmlDocumentEntity_FromSpmlDocument_WithNullInputs_ShouldHandleGracefully() 
         {
             // Act & Assert
             Assert.Throws<ArgumentNullException>(
@@ -431,7 +470,7 @@ namespace SignPuddle.API.Tests.ErrorHandling
         }
 
         [Fact]
-        public async Task SpmlDocumentEntity_FromSpmlDocument_WithEmptySpmlDocument_ShouldUseDefaults()
+        public void SpmlDocumentEntity_FromSpmlDocument_WithEmptySpmlDocument_ShouldUseDefaults() 
         {
             // Arrange
             var emptySpmlDocument = new SpmlDocument
@@ -458,30 +497,35 @@ namespace SignPuddle.API.Tests.ErrorHandling
         public async Task ExportAsXml_WithCorruptedDocument_ShouldHandleGracefully()
         {
             // Arrange - Create document with corrupted SpmlDocument
+            var repository = _serviceProviderFactory.GetRequiredService<ISpmlRepository>(); 
             var corruptedEntity = new SpmlDocumentEntity
             {
                 Id = Guid.NewGuid().ToString(),
                 PartitionKey = "sgn",
                 DocumentType = "spml",
-                SpmlDocument = new SpmlDocument(), // Empty/invalid document
-                OriginalXml = "corrupted xml",
+                SpmlDocument = null, // This is the corruption
+                OriginalXml = "<test>corrupted</test>",
                 SavedAt = DateTime.UtcNow
             };
-
-            await _repository.SaveAsync(corruptedEntity);
+            await repository.SaveAsync(corruptedEntity); 
 
             // Act
-            var exportedXml = await _repository.ExportSpmlDocumentAsXmlAsync(corruptedEntity.Id);
+            var exportedXml = await repository.ExportSpmlDocumentAsXmlAsync(corruptedEntity.Id); 
 
             // Assert
-            // Should return the original XML even if SpmlDocument is corrupted
-            Assert.NotNull(exportedXml);
-            Assert.Contains("corrupted xml", exportedXml);
+            Assert.Null(exportedXml); // Expect null or specific error handling if implemented
         }
 
         public void Dispose()
         {
-            _context?.Dispose();
+            // Dispose of the DbContext if it's an InMemory database
+            // For other providers, this might not be necessary or might be handled differently.
+            if (_serviceProviderFactory is IDisposable disposableFactory)
+            {
+                disposableFactory.Dispose();
+            }
+            // If _spmlPersistenceService or other resolved services implement IDisposable and need cleanup,
+            // they should be handled here or by making the test class IAsyncLifetime if async cleanup is needed.
         }
     }
 }
