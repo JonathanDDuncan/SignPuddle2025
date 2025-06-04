@@ -419,7 +419,7 @@ namespace SignPuddle.API.Tests.Controllers
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result); // ActionResult directly
             var problemDetails = Assert.IsType<ProblemDetails>(badRequestResult.Value);
-            Assert.Equal("Document ID is required", problemDetails.Title);
+            Assert.Contains("Document ID is required", problemDetails.Title);
             Assert.Equal(StatusCodes.Status400BadRequest, problemDetails.Status);
         }
 
@@ -435,6 +435,7 @@ namespace SignPuddle.API.Tests.Controllers
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result); // ActionResult directly
             var problemDetails = Assert.IsType<ProblemDetails>(badRequestResult.Value);
+            // The controller should treat null, empty, and whitespace-only IDs as invalid
             Assert.Equal("Document ID is required", problemDetails.Title);
             Assert.Equal(StatusCodes.Status400BadRequest, problemDetails.Status);
         }

@@ -102,7 +102,7 @@ namespace SignPuddle.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<SpmlDocumentEntity>> GetSpmlDocument(string id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrWhiteSpace(id))
             {
                 return BadRequest(new ProblemDetails { Title = "Document ID is required", Status = StatusCodes.Status400BadRequest });
             }
@@ -151,7 +151,7 @@ namespace SignPuddle.API.Controllers
         [Produces("application/xml", "text/xml")]
         public async Task<ActionResult> ExportSpmlDocument(string id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrWhiteSpace(id))
             {
                 return BadRequest(new ProblemDetails { Title = "Document ID is required", Status = StatusCodes.Status400BadRequest });
             }
@@ -172,7 +172,7 @@ namespace SignPuddle.API.Controllers
         [HttpPost("{id}/convert")]
         public async Task<ActionResult<SpmlConversionResult>> ConvertToEntities(string id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrWhiteSpace(id))
             {
                 return BadRequest(new ProblemDetails { Title = "Document ID is required", Status = StatusCodes.Status400BadRequest });
             }
@@ -235,7 +235,7 @@ namespace SignPuddle.API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteSpmlDocument(string id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrWhiteSpace(id))
             {
                 return BadRequest(new ProblemDetails { Title = "Document ID is required", Status = StatusCodes.Status400BadRequest });
             }
