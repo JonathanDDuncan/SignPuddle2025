@@ -1,14 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.SqlServer.Server;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 
 namespace SignPuddle.API.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : SignPuddleBaseController
     {
         private static List<User> _users = new List<User>
         {

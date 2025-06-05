@@ -5,7 +5,7 @@ namespace SignPuddle.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SymbolController : ControllerBase
+    public class SymbolController : SignPuddleBaseController
     {
         private readonly ISymbolService _symbolService;
         private readonly IRenderService _renderService;

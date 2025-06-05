@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using HealthChecks.CosmosDb;
 using SignPuddle.API.Data;
 using SignPuddle.API.Data.Repositories;
 using SignPuddle.API.Services;

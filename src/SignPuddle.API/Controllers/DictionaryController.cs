@@ -8,7 +8,7 @@ namespace SignPuddle.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class DictionaryController : ControllerBase
+    public class DictionaryController : SignPuddleBaseController
     {
         private readonly IDictionaryRepository _dictionaryRepository;
 

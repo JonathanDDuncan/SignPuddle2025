@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SignPuddle.API.Data;
 using SignPuddle.API.Models;
@@ -8,7 +7,7 @@ namespace SignPuddle.API.Controllers
 {
     [ApiController]
     [Route("api/spml")]
-    public class SPMLController : ControllerBase
+    public class SPMLController : SignPuddleBaseController
     {
         private readonly ISpmlImportService _spmlImportService;
         private readonly IDictionaryRepository _dictionaryRepository;

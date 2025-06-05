@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SignPuddle.API.E2ETests.Fixtures;
 using Xunit;
 
 namespace SignPuddle.API.E2ETests.Controllers

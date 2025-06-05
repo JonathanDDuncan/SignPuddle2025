@@ -1,14 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.SqlServer.Server;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 
 namespace SignPuddle.API.Controllers
 {
     [Route("api/formats")]
     [ApiController]
-    public class FormatsController : ControllerBase
+    public class FormatsController : SignPuddleBaseController
     {
         private static List<Format> _formats = new List<Format>
         {

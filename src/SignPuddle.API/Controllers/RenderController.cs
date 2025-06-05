@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Text.Json;
 
 namespace SignPuddle.API.Controllers
 {
     [Route("api/render")]
     [ApiController]
-    public class RenderController : ControllerBase
+    public class RenderController : SignPuddleBaseController
     {
         [HttpGet]
         public IActionResult GetRender([FromQuery] string content = "default", [FromQuery] string format = "svg")

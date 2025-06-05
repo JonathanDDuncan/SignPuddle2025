@@ -21,4 +21,10 @@
     <ProjectReference Include="..\SignPuddle.API\SignPuddle.API.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\sgn4-small.spml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
