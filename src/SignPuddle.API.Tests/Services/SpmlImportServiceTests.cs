@@ -151,7 +151,7 @@ namespace SignPuddle.API.Tests.Services
             // Arrange
             var xmlContent = await File.ReadAllTextAsync(_testDataPath);
             var spmlDocument = await _spmlImportService.ParseSpmlAsync(xmlContent);
-            var dictionaryId = 123;
+            var dictionaryId = "123";
 
             // Act
             var signs = await _spmlImportService.ConvertToSignsAsync(spmlDocument, dictionaryId);
@@ -194,7 +194,7 @@ namespace SignPuddle.API.Tests.Services
 </spml>";
 
             var spmlDocument = await _spmlImportService.ParseSpmlAsync(xmlContent);
-            var dictionaryId = 123;
+            var dictionaryId = "123";
 
             // Act
             var signs = await _spmlImportService.ConvertToSignsAsync(spmlDocument, dictionaryId);

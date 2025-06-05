@@ -47,30 +47,30 @@ namespace SignPuddle.API.Controllers
                 // Parse SPML
                 var spmlDocument = await _spmlImportService.ParseSpmlAsync(xmlContent);
 
-                var existingDictionary = await LoadExistingDictionary(spmlDocument);
+                // var existingDictionary = await LoadExistingDictionary(spmlDocument);
 
                 Dictionary savedDictionary;
                 List<SignPuddle.API.Models.Sign> updatedSigns;
                 string ownerId = "signpuddle-import";
-                if (existingDictionary != null)
-                {
-                    var (signsToAdd, signsToUpdate) = await MergeInSPML(existingDictionary, spmlDocument);
-                    // Update existing dictionary
+                // if (existingDictionary != null)
+                // {
+                //     var (signsToAdd, signsToUpdate) = await MergeInSPML(existingDictionary, spmlDocument);
+                //     // Update existing dictionary
 
-                    foreach (var sign in signsToAdd)
-                    {
-                        await _signService.CreateSignAsync(sign,ownerId);
-                    }
+                //     foreach (var sign in signsToAdd)
+                //     {
+                //         await _signService.CreateSignAsync(sign,ownerId);
+                //     }
 
-                    foreach (var sign in signsToUpdate)
-                    {
-                        await _signService.UpdateSignAsync(sign);
-                    }
-                    updatedSigns = signsToAdd.Concat(signsToUpdate).ToList();
-                    savedDictionary = existingDictionary;
-                }
-                else
-                {
+                //     foreach (var sign in signsToUpdate)
+                //     {
+                //         await _signService.UpdateSignAsync(sign);
+                //     }
+                //     updatedSigns = signsToAdd.Concat(signsToUpdate).ToList();
+                //     savedDictionary = existingDictionary;
+                // }
+                // else
+                // {
                     // Convert to dictionary
                     var dictionary = await _spmlImportService.ConvertToDictionaryAsync(spmlDocument, ownerId);
 
@@ -84,7 +84,7 @@ namespace SignPuddle.API.Controllers
                     {
                         await _signService.CreateSignAsync(sign, ownerId);
                     }
-                }
+                // }
                 var result = new SpmlImportResult
                 {
                     Dictionary = savedDictionary,

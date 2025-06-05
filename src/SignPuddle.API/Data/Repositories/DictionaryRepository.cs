@@ -6,11 +6,11 @@ namespace SignPuddle.API.Data
     public interface IDictionaryRepository
     {
         Task<IEnumerable<Dictionary>> GetAllAsync();
-        Task<Dictionary?> GetByIdAsync(int id);
+        Task<Dictionary?> GetByIdAsync(string id);
         Task<IEnumerable<Dictionary>> GetByOwnerAsync(string ownerId);
         Task<Dictionary> CreateAsync(Dictionary dictionary);
         Task<Dictionary?> UpdateAsync(Dictionary dictionary);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(string id);
     }
 
     public class DictionaryRepository : IDictionaryRepository
@@ -27,7 +27,7 @@ namespace SignPuddle.API.Data
             return await _context.Dictionaries.ToListAsync();
         }
 
-        public async Task<Dictionary?> GetByIdAsync(int id)
+        public async Task<Dictionary?> GetByIdAsync(string id)
         {
             return await _context.Dictionaries.FindAsync(id);
         }
@@ -60,7 +60,7 @@ namespace SignPuddle.API.Data
             return existingDictionary;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(string id)
         {
             var dictionary = await _context.Dictionaries.FindAsync(id);
             if (dictionary == null)

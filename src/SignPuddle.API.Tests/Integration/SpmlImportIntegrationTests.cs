@@ -38,7 +38,7 @@ namespace SignPuddle.API.Tests.Integration
             Assert.Equal(new DateTime(2011, 7, 18, 21, 40, 53, DateTimeKind.Utc), dictionary.Updated);
 
             // Convert to Signs
-            var dictionaryId = 42;
+            var dictionaryId = "42";
             var signs = await _spmlImportService.ConvertToSignsAsync(spmlDocument, dictionaryId);
             Assert.NotNull(signs);
             Assert.Equal(10, signs.Count);

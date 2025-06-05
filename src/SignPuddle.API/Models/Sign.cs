@@ -7,7 +7,7 @@ namespace SignPuddle.API.Models
         [Key]
         public int PuddleSignId { get; set; }
         
-         public int DictionaryId { get; set; }
+         public string? DictionaryId { get; set; }
         public string? PuddleId { get; set; }
    
         public string? Fsw { get; set; } = string.Empty; // Formal SignWriting notation

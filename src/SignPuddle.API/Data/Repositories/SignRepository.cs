@@ -7,7 +7,7 @@ namespace SignPuddle.API.Data
     {
         Task<IEnumerable<Sign>> GetAllAsync();
         Task<Sign?> GetByIdAsync(int id);
-        Task<IEnumerable<Sign>> GetByDictionaryIdAsync(int dictionaryId);
+        Task<IEnumerable<Sign>> GetByDictionaryIdAsync(string dictionaryId);
         Task<IEnumerable<Sign>> SearchByGlossAsync(string searchTerm);
         Task<Sign> CreateAsync(Sign sign);
         Task<Sign?> UpdateAsync(Sign sign);
@@ -35,7 +35,7 @@ namespace SignPuddle.API.Data
                 .FirstOrDefaultAsync(s => s.PuddleSignId == id);
         }
 
-        public async Task<IEnumerable<Sign>> GetByDictionaryIdAsync(int dictionaryId)
+        public async Task<IEnumerable<Sign>> GetByDictionaryIdAsync(string dictionaryId)
         {
             return await _context.Signs
                 .Where(s => s.DictionaryId == dictionaryId)

@@ -5,7 +5,7 @@ namespace SignPuddle.API.Models
     public class Dictionary
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
         
         public string? PuddleId { get; set; }
         public string? PuddleType { get; set; }

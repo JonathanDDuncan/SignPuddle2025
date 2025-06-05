@@ -8,17 +8,17 @@ namespace SignPuddle.API.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-        }        public DbSet<Sign> Signs { get; set; } = default!;
+        }
+        public DbSet<Sign> Signs { get; set; } = default!;
         public DbSet<Symbol> Symbols { get; set; } = default!;
         public DbSet<Dictionary> Dictionaries { get; set; } = default!;
         public DbSet<User> Users { get; set; } = default!;
-        public DbSet<SpmlDocumentEntity> SpmlDocuments { get; set; } = default!;        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public DbSet<SpmlDocumentEntity> SpmlDocuments { get; set; } = default!; protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             // Configure relationships and indexes
-            modelBuilder.Entity<Sign>()
-                .HasIndex(s => s.DictionaryId);
+            modelBuilder.Entity<Sign>();
 
             modelBuilder.Entity<Sign>()
                 .HasOne(s => s.Dictionary)
@@ -28,7 +28,7 @@ namespace SignPuddle.API.Data
                 .ToContainer("SpmlDocuments")
                 .HasPartitionKey(e => e.PartitionKey)
                 .HasNoDiscriminator();
-                
+
             // Configure SpmlDocument as an owned entity
             modelBuilder.Entity<SpmlDocumentEntity>()
                 .OwnsOne(e => e.SpmlDocument);

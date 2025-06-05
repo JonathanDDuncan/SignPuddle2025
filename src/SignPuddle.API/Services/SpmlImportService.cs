@@ -9,7 +9,7 @@ namespace SignPuddle.API.Services
         Task<SpmlDocument> ParseSpmlAsync(string xmlContent);
         Task<SpmlDocument> ParseSpmlFromFileAsync(string filePath);
         Task<Dictionary> ConvertToDictionaryAsync(SpmlDocument spmlDocument, string? ownerId = null);
-        Task<List<Sign>> ConvertToSignsAsync(SpmlDocument spmlDocument, int dictionaryId);
+        Task<List<Sign>> ConvertToSignsAsync(SpmlDocument spmlDocument, string dictionaryId);
     }
 
     public class SpmlImportService : ISpmlImportService
@@ -48,6 +48,7 @@ namespace SignPuddle.API.Services
                 throw new ArgumentNullException(nameof(spmlDocument));
             var dictionary = new Dictionary
             {
+                Id = Guid.NewGuid().ToString(),
                 PuddleId = spmlDocument.PuddleId.ToString(),
                 PuddleType = spmlDocument.Type,
                 Name = spmlDocument.DictionaryName ?? $"Imported Dictionary puddle {spmlDocument.PuddleId}",
@@ -60,7 +61,7 @@ namespace SignPuddle.API.Services
 
             return await Task.FromResult(dictionary);
         }
-        public async Task<List<Sign>> ConvertToSignsAsync(SpmlDocument spmlDocument, int dictionaryId)
+        public async Task<List<Sign>> ConvertToSignsAsync(SpmlDocument spmlDocument, string dictionaryId)
         {
             if (spmlDocument == null)
                 throw new ArgumentNullException(nameof(spmlDocument));

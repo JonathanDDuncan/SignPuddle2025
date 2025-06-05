@@ -33,21 +33,19 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 
 // Configure CosmosDB
-string CosmosConnectionString() => builder.Configuration.GetConnectionString("CosmosDb") ?? string.Empty;
+string CosmosAccountEndpoint() => builder.Configuration["CosmosDb:AccountEndpoint"] ?? "";
+string CosmosAccountKey() => builder.Configuration["CosmosDb:AccountKey"] ?? "";
 string DatabaseName() => builder.Configuration["CosmosDb:DatabaseName"] ?? "SignPuddle";
 
 if (!builder.Environment.IsEnvironment("Testing"))
 {
-    // Register CosmosDB client
-    builder.Services.AddSingleton(serviceProvider =>
-    {
-        return new CosmosClient(CosmosConnectionString());
-    });
+    
 
     // Configure DbContext for CosmosDB
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseCosmos(
-            connectionString: CosmosConnectionString(),
+            accountEndpoint: CosmosAccountEndpoint(),
+            accountKey: CosmosAccountKey(),
             databaseName: DatabaseName(),
             cosmosOptionsAction: options =>
             {
@@ -66,7 +64,7 @@ if (!builder.Environment.IsEnvironment("Testing"))
                 HealthCheckResult? result = null;
                 Task.Run(async () =>
                 {
-                    var client = new CosmosClient(CosmosConnectionString());
+                    var client = new CosmosClient(CosmosAccountEndpoint(), CosmosAccountKey());
                     // Use async/await to avoid deadlocks and improve performance
                     await client.ReadAccountAsync();
                     result = HealthCheckResult.Healthy("CosmosDB connection is healthy");

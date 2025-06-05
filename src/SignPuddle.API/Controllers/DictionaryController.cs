@@ -25,7 +25,7 @@ namespace SignPuddle.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetDictionaryById(int id)
+        public async Task<IActionResult> GetDictionaryById(string id)
         {
             var dictionary = await _dictionaryRepository.GetByIdAsync(id);
             if (dictionary == null)
@@ -63,9 +63,9 @@ namespace SignPuddle.API.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateDictionary(int id, [FromBody] Dictionary dictionary)
+        public async Task<IActionResult> UpdateDictionary(string dictionaryId, [FromBody] Dictionary dictionary)
         {
-            if (id != dictionary.Id)
+            if (dictionaryId != dictionary.Id)
             {
                 return BadRequest("ID mismatch");
             }
@@ -75,7 +75,7 @@ namespace SignPuddle.API.Controllers
                 return BadRequest(ModelState);
             }
             
-            var existingDictionary = await _dictionaryRepository.GetByIdAsync(id);
+            var existingDictionary = await _dictionaryRepository.GetByIdAsync(dictionaryId);
             if (existingDictionary == null)
             {
                 return NotFound();
@@ -99,7 +99,7 @@ namespace SignPuddle.API.Controllers
 
         [Authorize]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDictionary(int id)
+        public async Task<IActionResult> DeleteDictionary(string id)
         {
             var dictionary = await _dictionaryRepository.GetByIdAsync(id);
             if (dictionary == null)

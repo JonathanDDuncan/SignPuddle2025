@@ -215,7 +215,7 @@ namespace SignPuddle.API.Services
             var dictionary = await _spmlImportService.ConvertToDictionaryAsync(spmlDocument, spmlDocumentEntity.OwnerId);
 
             // Convert to Signs (use a placeholder dictionary ID since we're not saving to EF Core yet)
-            var signs = await _spmlImportService.ConvertToSignsAsync(spmlDocument, 0);
+            var signs = await _spmlImportService.ConvertToSignsAsync(spmlDocument, dictionary.Id);
 
             return new SpmlConversionResult
             {
