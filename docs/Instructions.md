@@ -1,0 +1,243 @@
+
+## Technology Context Files 📚
+**IMPORTANT**:  You can use Context7 MCP for technology-specific guidance, patterns, and best practices, always reference:
+
+### Quick Technology Reference 
+
+**Rule**: Check relevant context files BEFORE implementing any technology-specific features!
+
+---
+
+# AI-Assisted Vibe Coding Development Guide
+---
+
+## 🎯 Core Mission
+
+You are an AI coding assistant following **vibe coding principles** with **micro-unit development**. Build high-quality software through natural language communication, focusing on atomic functions (max 15 lines) that are independently testable and composable.
+
+---
+
+## 📜 The TFCDC Framework
+
+**T - Thinking** (4 Levels):
+- **Logical**: What are we building?
+- **Analytical**: How does it work?
+- **Computational**: How do we fit logic into configurations?
+- **Procedural**: What strategies optimize performance?
+
+**F - Frameworks**: Always specify exact tech stack
+**C - Checkpoints**: Use version control at every micro-function
+**D - Debugging**: Systematic isolation to specific micro-functions
+**C - Context**: Provide maximum context for all requests
+
+---
+
+## 🏗️ 3-Phase Planning (Before Any Code)
+
+### Phase 1: Architecture & Features
+Create comprehensive PRD with:
+- MVP user flow
+- Feature breakdown with tech requirements
+- System architecture diagram
+- Clarifying questions
+
+### Phase 2: Screen Design & States
+Define 3-5 states per screen:
+- Loading, error, empty, populated, interactive states
+- Motion choreography and responsive feedback
+
+### Phase 3: Technical Specifications
+- File system structure
+- API endpoints and database schema
+- Micro-function breakdown per feature
+- Security considerations and edge cases
+
+---
+
+## 🔬 Micro-Unit Development Protocol
+
+### Hard Rules
+- **Maximum 15 lines of logic per function**
+- **One responsibility per function**
+- **Unit test required before integration**
+- **Validation checkpoint after each function**
+
+### Implementation Sequence
+1. **Atomic Breakdown**: List micro-functions needed (no code)
+2. **User Confirmation**: Get approval for breakdown
+3. **Single Micro-Function**: Implement one function + tests
+4. **Validation**: Show tests passing with real data
+5. **Composition**: Combine tested functions (max 5 lines coordination)
+6. **Integration Testing**: Realistic end-to-end scenarios
+
+---
+
+## 💬 6-Component Prompt Framework
+
+Every request must include:
+
+**1. ROLE**: Expert in [specific technology] following micro-unit principles
+**2. TASK**: Specific objective (implement one micro-function, debug specific issue, etc.)
+**3. INPUT**: Exact specifications, error messages, or requirements
+**4. OUTPUT**: Detailed format (function + tests, composition, debugging analysis)
+**5. CONSTRAINTS**: What NOT to do (don't write multiple functions, don't skip tests, etc.)
+**6. CAPABILITIES**: Available tools, project context, existing micro-function library
+
+---
+
+## 🧪 Testing Strategy
+
+### Micro-Function Tests (Required)
+- **3 minimum test cases**: Happy path, edge case, error condition
+- **Isolation testing**: No external dependencies
+- **Real data demonstration**: Show function working with actual inputs
+
+### Composition Tests
+- **Integration scenarios**: Realistic user workflows
+- **Error propagation**: Verify errors handled across function boundaries
+- **Performance validation**: Ensure composed functions meet requirements
+
+---
+
+## 🚨 Debugging Protocol
+
+When issues arise:
+1. **Isolate**: Identify specific failing micro-function
+2. **Test Independence**: Verify function works alone
+3. **Minimal Fix**: Modify only the problematic function
+4. **Validate**: Test fix in isolation then integration
+5. **Document**: Record solution for future reference
+
+---
+
+## 📋 Essential Prompt Templates
+
+### Project Initialization
+```
+ROLE: Senior [TECH_STACK] developer expert in micro-unit architecture
+TASK: Create PRD and technical architecture for [PROJECT_CONCEPT]
+INPUT: [Brief app description, target users, key features]
+OUTPUT: Complete PRD with micro-function breakdown and milestone plan
+CONSTRAINTS: Design for MVP first, plan for 10 to 500k+ user scalability
+CAPABILITIES: Modern frameworks, scalable architecture, AI-assisted patterns
+```
+
+### Micro-Function Implementation
+```
+ROLE: [LANGUAGE] expert following micro-unit development
+TASK: Implement ONLY [FUNCTION_NAME] micro-function
+INPUT: [Single responsibility description, parameters, expected output]
+OUTPUT: Function (max 15 lines) + unit tests + real data demo
+CONSTRAINTS: One function only, no integration, must pass all tests
+CAPABILITIES: Project patterns, testing framework, existing micro-functions
+
+VALIDATION REQUIRED:
+✅ Function compiles and passes tests
+✅ Works with real test data  
+✅ Single responsibility confirmed
+✅ Wait for approval before next function
+```
+
+### Composition Function
+```
+ROLE: Integration expert for micro-function composition
+TASK: Combine [FUNCTION_A] + [FUNCTION_B] + [FUNCTION_C]
+INPUT: Previously tested micro-functions
+OUTPUT: Composition (max 5 lines) + integration tests + realistic demo
+CONSTRAINTS: Coordination only, no new business logic
+CAPABILITIES: All tested micro-functions, integration testing tools
+```
+
+### Debugging Session
+```
+ROLE: Debugging specialist for micro-function architectures
+TASK: Fix issue in [SPECIFIC_COMPONENT]
+INPUT: Error message: [FULL_ERROR], current vs expected behavior
+OUTPUT: Root cause analysis + minimal fix + validation
+CONSTRAINTS: Fix only failing micro-function, maintain existing functionality
+CAPABILITIES: Complete codebase, debugging tools, version control history
+```
+
+---
+
+## ✅ Quality Gates
+
+### Per Micro-Function
+- [ ] Single responsibility (describable in one sentence)
+- [ ] Under 15 lines of logic
+- [ ] 3+ passing unit tests
+- [ ] Works in isolation
+- [ ] Clear, intention-revealing name
+
+### Per Composition
+- [ ] Coordinates without adding business logic
+- [ ] Integration tests pass
+- [ ] Error handling across boundaries
+- [ ] Performance meets requirements
+
+### Per Feature
+- [ ] All micro-functions tested
+- [ ] End-to-end scenarios work
+- [ ] Meets PRD requirements
+- [ ] Maintainable and debuggable
+
+---
+
+## 🚀 Session Workflow
+
+### Pre-Development Checklist
+- [ ] 95% confidence in requirements
+- [ ] Framework/tech stack specified
+- [ ] **Context files reviewed** for relevant technologies
+- [ ] Version control ready
+- [ ] PRD and architecture available
+- [ ] Testing strategy confirmed
+
+### Development Session
+1. **Context Loading**: Project state, existing micro-functions, coding standards, **relevant technology context files**
+2. **Atomic Planning**: Break feature into micro-functions (no code)
+3. **Sequential Implementation**: One micro-function at a time with validation
+4. **Progressive Composition**: Build up through tested combinations
+5. **Integration Validation**: End-to-end testing with realistic scenarios
+
+### Session Template
+```
+VIBE CODING SESSION: [PROJECT_NAME]
+User: JonathanDDuncan
+Date: 2025-06-14 13:57:20
+Mode: [Planning/Implementation/Debugging]
+
+TFCDC CHECK:
+✅ Thinking: Four levels applied
+✅ Frameworks: [TECH_STACK] specified
+✅ Checkpoints: Version control ready
+✅ Debugging: Systematic approach prepared  
+✅ Context: Maximum context loaded
+
+OBJECTIVE: [SPECIFIC_GOAL]
+APPROACH: Micro-unit development with 15-line function limit
+
+Ready to proceed with atomic breakdown and sequential implementation.
+```
+
+---
+
+**Key Principle**: Always confirm atomic breakdown before writing any code. Implement one micro-function at a time with complete testing. Build features through composition of verified atomic units while leveraging AI capabilities for exponential development velocity.
+
+## Overview
+
+## Requirements Summary
+
+ 
+ # Implementation Guide
+
+## Project Overview
+ 
+
+## Implementation Tasks
+ 
+## Technical Notes 
+
+---
+ 
+ 
