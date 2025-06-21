@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SignPuddle.API.Data;
 using SignPuddle.API.Models;
+using SignPuddle.API.Data.Repositories;
 using System.Security.Claims;
 
 namespace SignPuddle.API.Controllers
@@ -40,6 +41,8 @@ namespace SignPuddle.API.Controllers
         public async Task<IActionResult> GetMyDictionaries()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
             var dictionaries = await _dictionaryRepository.GetByOwnerAsync(userId);
             return Ok(dictionaries);
         }
@@ -116,6 +119,17 @@ namespace SignPuddle.API.Controllers
             
             var result = await _dictionaryRepository.DeleteAsync(id);
             return NoContent();
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] DictionarySearchParameters parameters)
+        {
+            parameters.Validate();
+            var baseQuery = _dictionaryRepository.BuildSearchQuery(parameters);
+            var totalCount = await _dictionaryRepository.CountSearchResultsAsync(baseQuery);
+            var items = await _dictionaryRepository.ExecuteSearchQueryAsync(baseQuery, parameters.Page, parameters.PageSize);
+            var dtos = items.Select(DictionaryRepository.MapToDto);
+            return Ok(new { totalCount, items = dtos, page = parameters.Page, pageSize = parameters.PageSize });
         }
     }
 }

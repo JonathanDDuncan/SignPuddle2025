@@ -12,6 +12,9 @@ namespace SignPuddle.API.Data
         Task<Dictionary> CreateAsync(Dictionary dictionary);
         Task<Dictionary?> UpdateAsync(Dictionary dictionary);
         Task<bool> DeleteAsync(string id);
+        IQueryable<Dictionary> BuildSearchQuery(DictionarySearchParameters parameters);
+        Task<int> CountSearchResultsAsync(IQueryable<Dictionary> query);
+        Task<List<Dictionary>> ExecuteSearchQueryAsync(IQueryable<Dictionary> query, int? page = null, int? pageSize = null);
     }
 
     public class DictionaryRepository : IDictionaryRepository
