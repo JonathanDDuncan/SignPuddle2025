@@ -94,5 +94,28 @@ namespace SignPuddle.API.Tests.Data.Repositories
             Assert.Single(results);
             Assert.Equal("apple", results[0].Gloss);
         }
+
+        [Fact]
+        public void MapToDto_Dictionary_Works()
+        {
+            var entity = new Dictionary { Id = "1", Name = "Test", Description = "Desc", IsPublic = true, OwnerId = "user1" };
+            var dto = DictionaryRepository.MapToDto(entity);
+            Assert.Equal("1", dto.Id);
+            Assert.Equal("Test", dto.Name);
+            Assert.Equal("Desc", dto.Description);
+            Assert.True(dto.IsPublic);
+            Assert.Equal("user1", dto.OwnerId);
+        }
+
+        [Fact]
+        public void MapToDto_Sign_Works()
+        {
+            var entity = new Sign { PuddleSignId = 5, Gloss = "cat", DictionaryId = "1", Fsw = "M100x100S2" };
+            var dto = SignRepository.MapToDto(entity);
+            Assert.Equal(5, dto.PuddleSignId);
+            Assert.Equal("cat", dto.Gloss);
+            Assert.Equal("1", dto.DictionaryId);
+            Assert.Equal("M100x100S2", dto.Fsw);
+        }
     }
 }

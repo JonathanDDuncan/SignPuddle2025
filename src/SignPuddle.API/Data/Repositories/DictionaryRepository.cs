@@ -92,5 +92,17 @@ namespace SignPuddle.API.Data
                 query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
             return await query.ToListAsync();
         }
+
+        public static DictionaryDto MapToDto(Dictionary entity)
+        {
+            return new DictionaryDto
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Description = entity.Description,
+                IsPublic = entity.IsPublic,
+                OwnerId = entity.OwnerId
+            };
+        }
     }
 }

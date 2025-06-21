@@ -104,5 +104,16 @@ namespace SignPuddle.API.Data
                 query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
             return await query.ToListAsync();
         }
+
+        public static SignDto MapToDto(Sign entity)
+        {
+            return new SignDto
+            {
+                PuddleSignId = entity.PuddleSignId,
+                Gloss = entity.Gloss,
+                DictionaryId = entity.DictionaryId,
+                Fsw = entity.Fsw
+            };
+        }
     }
 }
