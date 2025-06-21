@@ -117,5 +117,28 @@ namespace SignPuddle.API.Tests.Data.Repositories
             Assert.Equal("1", dto.DictionaryId);
             Assert.Equal("M100x100S2", dto.Fsw);
         }
+
+        [Fact]
+        public void Validate_DictionarySearchParameters_Works()
+        {
+            var p = new DictionarySearchParameters { Page = 0, PageSize = 200, Query = "  test  ", OwnerId = "  user  " };
+            p.Validate();
+            Assert.Equal(1, p.Page);
+            Assert.Equal(10, p.PageSize);
+            Assert.Equal("test", p.Query);
+            Assert.Equal("user", p.OwnerId);
+        }
+
+        [Fact]
+        public void Validate_SignSearchParameters_Works()
+        {
+            var p = new SignSearchParameters { Page = -5, PageSize = 0, Gloss = "  cat  ", DictionaryId = " 1 ", Fsw = "  fsw  " };
+            p.Validate();
+            Assert.Equal(1, p.Page);
+            Assert.Equal(10, p.PageSize);
+            Assert.Equal("cat", p.Gloss);
+            Assert.Equal("1", p.DictionaryId);
+            Assert.Equal("fsw", p.Fsw);
+        }
     }
 }
