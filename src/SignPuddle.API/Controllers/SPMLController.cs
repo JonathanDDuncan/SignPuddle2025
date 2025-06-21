@@ -224,11 +224,9 @@ namespace SignPuddle.API.Controllers
             }
             return (signsToAdd, signsToUpdate);
         }
-    }
-
-    public class SpmlImportResult
+    }    public class SpmlImportResult
     {
-        public Dictionary Dictionary { get; set; } = new Dictionary();
+        public Dictionary? Dictionary { get; set; }
         public List<SignPuddle.API.Models.Sign> UpdatedSigns { get; set; } = new List<SignPuddle.API.Models.Sign>();
         public int OriginalPuddleId { get; set; }
         public DateTime ImportedAt { get; set; }

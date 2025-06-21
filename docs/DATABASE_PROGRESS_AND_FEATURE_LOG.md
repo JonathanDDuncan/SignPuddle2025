@@ -601,10 +601,10 @@ src/SignPuddle.API.E2ETests/
 
 ### ⚠️ **Known Issues** (Non-blocking)
 
-1. **Compilation Warnings** (6 warnings)
+1. **Compilation Warnings** (5 warnings)
    - Possible null reference warnings in controllers
-   - Non-nullable property warnings in entities
    - HeaderDictionary usage warnings (HTTP response headers)
+   - Unreachable code warnings
    - All warnings are non-breaking and don't affect functionality
 
 ### 🔄 **Medium Priority Issues**

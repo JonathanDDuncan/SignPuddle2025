@@ -255,14 +255,12 @@ namespace SignPuddle.API.Services
         public Dictionary? Dictionary { get; set; }
         public List<Sign>? Signs { get; set; }
         public string? ErrorMessage { get; set; } // Changed from Exception? Error
-    }
-
-    /// <summary>
+    }    /// <summary>
     /// Result of converting SPML document to EF Core entities
     /// </summary>
     public class SpmlConversionResult
     {
-        public Dictionary Dictionary { get; set; } = new();
+        public Dictionary? Dictionary { get; set; }
         public List<Sign> Signs { get; set; } = new();
         public SpmlDocument SpmlDocument { get; set; } = new();
     }
