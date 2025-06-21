@@ -140,5 +140,41 @@ namespace SignPuddle.API.Tests.Data.Repositories
             Assert.Equal("1", p.DictionaryId);
             Assert.Equal("fsw", p.Fsw);
         }
+
+        [Fact]
+        public async Task CountSearchResultsAsync_Dictionary_Works()
+        {
+            var context = GetDbContext();
+            context.Dictionaries.AddRange(new List<Dictionary>
+            {
+                new Dictionary { Id = "1", Name = "Animals", Description = "Animal signs", IsPublic = true, OwnerId = "user1" },
+                new Dictionary { Id = "2", Name = "Colors", Description = "Color signs", IsPublic = false, OwnerId = "user2" },
+                new Dictionary { Id = "3", Name = "Fruits", Description = "Fruit signs", IsPublic = true, OwnerId = "user1" }
+            });
+            context.SaveChanges();
+            var repo = new DictionaryRepository(context);
+            var parameters = new DictionarySearchParameters { IsPublic = true };
+            var query = repo.BuildSearchQuery(parameters);
+            var count = await repo.CountSearchResultsAsync(query);
+            Assert.Equal(2, count);
+        }
+
+        [Fact]
+        public async Task CountSearchResultsAsync_Sign_Works()
+        {
+            var context = GetDbContext();
+            context.Signs.AddRange(new List<Sign>
+            {
+                new Sign { PuddleSignId = 1, Gloss = "cat", DictionaryId = "1", Fsw = "M100x100S2" },
+                new Sign { PuddleSignId = 2, Gloss = "dog", DictionaryId = "1", Fsw = "M200x200S3" },
+                new Sign { PuddleSignId = 3, Gloss = "apple", DictionaryId = "2", Fsw = "M300x300S4" }
+            });
+            context.SaveChanges();
+            var repo = new SignRepository(context);
+            var parameters = new SignSearchParameters { DictionaryId = "1" };
+            var query = repo.BuildSearchQuery(parameters);
+            var count = await repo.CountSearchResultsAsync(query);
+            Assert.Equal(2, count);
+        }
     }
 }

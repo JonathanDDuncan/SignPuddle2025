@@ -15,6 +15,7 @@ namespace SignPuddle.API.Data
         Task<bool> DeleteAsync(int id);
         IQueryable<Sign> BuildSearchQuery(SignSearchParameters parameters);
         Task<List<Sign>> ExecuteSearchQueryAsync(IQueryable<Sign> query, int? page = null, int? pageSize = null);
+        Task<int> CountSearchResultsAsync(IQueryable<Sign> query);
     }
 
     public class SignRepository : ISignRepository
@@ -103,6 +104,11 @@ namespace SignPuddle.API.Data
             if (page.HasValue && pageSize.HasValue && page > 0 && pageSize > 0)
                 query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
             return await query.ToListAsync();
+        }
+
+        public async Task<int> CountSearchResultsAsync(IQueryable<Sign> query)
+        {
+            return await query.CountAsync();
         }
 
         public static SignDto MapToDto(Sign entity)

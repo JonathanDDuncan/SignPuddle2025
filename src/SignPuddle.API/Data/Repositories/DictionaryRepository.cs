@@ -93,6 +93,11 @@ namespace SignPuddle.API.Data
             return await query.ToListAsync();
         }
 
+        public async Task<int> CountSearchResultsAsync(IQueryable<Dictionary> query)
+        {
+            return await query.CountAsync();
+        }
+
         public static DictionaryDto MapToDto(Dictionary entity)
         {
             return new DictionaryDto
