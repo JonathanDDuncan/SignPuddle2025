@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SignPuddle.API.Models;
+using SignPuddle.API.Data.Repositories;
 
 namespace SignPuddle.API.Data
 {
@@ -12,6 +13,7 @@ namespace SignPuddle.API.Data
         Task<Sign> CreateAsync(Sign sign);
         Task<Sign?> UpdateAsync(Sign sign);
         Task<bool> DeleteAsync(int id);
+        IQueryable<Sign> BuildSearchQuery(SignSearchParameters parameters);
     }
 
     public class SignRepository : ISignRepository
@@ -81,6 +83,18 @@ namespace SignPuddle.API.Data
             _context.Signs.Remove(sign);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public IQueryable<Sign> BuildSearchQuery(SignSearchParameters parameters)
+        {
+            var query = _context.Signs.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(parameters.Gloss))
+                query = query.Where(s => s.Gloss != null && s.Gloss.Contains(parameters.Gloss));
+            if (!string.IsNullOrWhiteSpace(parameters.DictionaryId))
+                query = query.Where(s => s.DictionaryId == parameters.DictionaryId);
+            if (!string.IsNullOrWhiteSpace(parameters.Fsw))
+                query = query.Where(s => s.Fsw != null && s.Fsw.Contains(parameters.Fsw));
+            return query;
         }
     }
 }

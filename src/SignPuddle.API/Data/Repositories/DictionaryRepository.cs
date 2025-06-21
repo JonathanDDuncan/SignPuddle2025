@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SignPuddle.API.Models;
+using SignPuddle.API.Data.Repositories;
 
 namespace SignPuddle.API.Data
 {
@@ -71,6 +72,18 @@ namespace SignPuddle.API.Data
             _context.Dictionaries.Remove(dictionary);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public IQueryable<Dictionary> BuildSearchQuery(DictionarySearchParameters parameters)
+        {
+            var query = _context.Dictionaries.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(parameters.Query))
+                query = query.Where(d => d.Name.Contains(parameters.Query) || (d.Description != null && d.Description.Contains(parameters.Query)));
+            if (!string.IsNullOrWhiteSpace(parameters.OwnerId))
+                query = query.Where(d => d.OwnerId == parameters.OwnerId);
+            if (parameters.IsPublic.HasValue)
+                query = query.Where(d => d.IsPublic == parameters.IsPublic.Value);
+            return query;
         }
     }
 }
