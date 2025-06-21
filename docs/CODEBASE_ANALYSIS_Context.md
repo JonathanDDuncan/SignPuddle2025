@@ -71,12 +71,12 @@ SignPuddle 2 is a web application for creating and managing SignWriting dictiona
 ### Technology Stack
 - **Frontend**: Svelte 4+ SPA with TypeScript, Vite build
 - **Backend**: C# ASP.NET Core 8+ Web API
-- **Database**: PostgreSQL + Redis cache
+- **Database**: CosmosDB (NoSQL for all data storage)
 - **Infrastructure**: Containerized deployment
 
 ### Architecture Pattern
 ```
-Svelte SPA ←→ C# Web API ←→ PostgreSQL/Redis
+Svelte SPA ←→ C# Web API ←→ CosmosDB
 ```
 
 ### Database Schema (Proposed)

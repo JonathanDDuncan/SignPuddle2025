@@ -496,8 +496,8 @@ function pack_spml($type, $pid) {
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Svelte SPA    │    │   C# API        │    │   Database      │
 │                 │    │                 │    │                 │
-│ - Component     │◄──►│ - Controllers   │◄──►│ - PostgreSQL    │
-│ - State Mgmt    │    │ - Services      │    │ - Redis Cache   │
+│ - Component     │◄──►│ - Controllers   │◄──►│ - CosmosDB      │
+│ - State Mgmt    │    │ - Services      │    │                 │
 │ - PWA Support   │    │ - Repositories  │    │ - File Storage  │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
@@ -527,8 +527,7 @@ function pack_spml($type, $pid) {
 **Database Layer**
 ```sql
 -- Normalized data structure
-- PostgreSQL for primary data
-- Redis for session/cache
+- CosmosDB for all data storage
 - File storage for assets
 - Full-text search indexing
 ```

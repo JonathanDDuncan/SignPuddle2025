@@ -446,9 +446,9 @@ Empower sign language communities, educators, and researchers with modern tools 
 
 #### Backend (C# .NET)
 - **Framework**: ASP.NET Core 8+ Web API
-- **Database**: PostgreSQL with Entity Framework Core
+- **Database**: CosmosDB with Entity Framework Core (NoSQL for all data storage)
 - **Authentication**: JWT with refresh tokens
-- **Caching**: Redis for session and data caching
+- **Performance**: Query optimization and database indexing
 - **File Storage**: Azure Blob Storage or AWS S3
 - **Documentation**: Swagger/OpenAPI integration
 

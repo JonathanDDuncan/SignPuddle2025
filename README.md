@@ -61,8 +61,7 @@ SignPuddle follows a **no-mocking** testing philosophy for real-world reliabilit
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Svelte SPA    │◄──►│   C# Web API    │◄──►│   PostgreSQL    │
-│                 │    │                 │    │   + Redis       │
+│   Svelte SPA    │◄──►│   C# Web API    │◄──►│   CosmosDB      │
 │ - Components    │    │ - Controllers   │    │ - Dictionaries  │
 │ - State Mgmt    │    │ - Services      │    │ - Signs         │
 │ - PWA Support   │    │ - Repositories  │    │ - Users         │
