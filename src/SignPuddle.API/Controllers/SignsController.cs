@@ -1,5 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using SignPuddle.API.Data;
+using SignPuddle.API.Data.Repositories;
+using SignPuddle.API.Models;
+using System.Linq;
 
 namespace SignPuddle.API.Controllers
 {
@@ -7,6 +11,7 @@ namespace SignPuddle.API.Controllers
     [ApiController]
     public class SignsController : SignPuddleBaseController
     {
+        private readonly ISignRepository _signRepository;
         private static readonly List<Sign> _initialSigns = new List<Sign>
         {
             new Sign { Id = 1, Content = "ASL:hello", Description = "Hello in ASL" },
@@ -14,6 +19,11 @@ namespace SignPuddle.API.Controllers
         };
 
         private static List<Sign> _signs = new List<Sign>(_initialSigns);
+
+        public SignsController(ISignRepository signRepository)
+        {
+            _signRepository = signRepository;
+        }
 
         [HttpGet]
         public IActionResult GetSigns()
@@ -49,7 +59,7 @@ namespace SignPuddle.API.Controllers
 
             _signs.Add(newSign);
 
-            Response.Headers.Add("Location", $"/api/signs/{newSign.Id}");
+            Response.Headers.Append("Location", $"/api/signs/{newSign.Id}");
 
             return CreatedAtAction(nameof(GetSign), new { id = newSign.Id }, (string?)JsonSerializer.Serialize(newSign));
         }
@@ -70,6 +80,17 @@ namespace SignPuddle.API.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] SignSearchParameters parameters)
+        {
+            parameters.Validate();
+            var baseQuery = _signRepository.BuildSearchQuery(parameters);
+            var totalCount = await _signRepository.CountSearchResultsAsync(baseQuery);
+            var items = await _signRepository.ExecuteSearchQueryAsync(baseQuery, parameters.Page, parameters.PageSize);
+            var dtos = items.Select(SignRepository.MapToDto);
+            return Ok(new { totalCount, items = dtos, page = parameters.Page, pageSize = parameters.PageSize });
         }
 
         // Helper method to reset sign data
