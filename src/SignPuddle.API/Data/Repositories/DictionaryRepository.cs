@@ -85,5 +85,12 @@ namespace SignPuddle.API.Data
                 query = query.Where(d => d.IsPublic == parameters.IsPublic.Value);
             return query;
         }
+
+        public async Task<List<Dictionary>> ExecuteSearchQueryAsync(IQueryable<Dictionary> query, int? page = null, int? pageSize = null)
+        {
+            if (page.HasValue && pageSize.HasValue && page > 0 && pageSize > 0)
+                query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
+            return await query.ToListAsync();
+        }
     }
 }

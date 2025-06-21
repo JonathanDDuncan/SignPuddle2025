@@ -14,6 +14,7 @@ namespace SignPuddle.API.Data
         Task<Sign?> UpdateAsync(Sign sign);
         Task<bool> DeleteAsync(int id);
         IQueryable<Sign> BuildSearchQuery(SignSearchParameters parameters);
+        Task<List<Sign>> ExecuteSearchQueryAsync(IQueryable<Sign> query, int? page = null, int? pageSize = null);
     }
 
     public class SignRepository : ISignRepository
@@ -95,6 +96,13 @@ namespace SignPuddle.API.Data
             if (!string.IsNullOrWhiteSpace(parameters.Fsw))
                 query = query.Where(s => s.Fsw != null && s.Fsw.Contains(parameters.Fsw));
             return query;
+        }
+
+        public async Task<List<Sign>> ExecuteSearchQueryAsync(IQueryable<Sign> query, int? page = null, int? pageSize = null)
+        {
+            if (page.HasValue && pageSize.HasValue && page > 0 && pageSize > 0)
+                query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
+            return await query.ToListAsync();
         }
     }
 }
