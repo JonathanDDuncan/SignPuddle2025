@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SignPuddle.API.Controllers
 {
@@ -242,9 +244,11 @@ namespace SignPuddle.API.Controllers
                     }
                     else
                     {
+                        var id = IdFromHash($"{spmlDocument.PuddleId}-{puddleSignId}-{entry.CreatedTimestampString}");
                         // Add new sign
                         var newSign = new SignPuddle.API.Models.Sign
                         {
+                            Id = id,
                             DictionaryId = existingDictionary.Id,
                             PuddleSignId = puddleSignId,
                             PuddleId = spmlDocument.PuddleId.ToString(),
@@ -268,6 +272,15 @@ namespace SignPuddle.API.Controllers
             }
             return (signsToAdd, signsToUpdate, alreadyUptoDate, skippedEntries, errors);
         }
+
+        public static string IdFromHash(string str)
+        {
+            using var sha256 = SHA256.Create();
+            var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(str));
+            var guid = new Guid(hashBytes.Take(16).ToArray());
+            return guid.ToString();
+        }
+ 
     }
     public class SpmlImportResult
     {

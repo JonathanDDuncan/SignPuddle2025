@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Xunit;
 using SignPuddle.API.Models;
 using SignPuddle.API.Services;
+using System.Security.Cryptography;
+using System.Text;
+using SignPuddle.API.Controllers;
 
 namespace SignPuddle.API.Tests.Integration
 {
@@ -20,6 +23,22 @@ namespace SignPuddle.API.Tests.Integration
             _testDataPath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "sgn4-small.spml");
         }
 
+[Fact]
+        public void IdFromHash_ProducesConsistentGuids()
+        {
+            // Arrange
+            var input = "test-string";
+            
+            // Act
+            var result1 = SPMLController.IdFromHash(input);
+            var result2 = SPMLController.IdFromHash(input);
+
+            // Assert
+            Assert.Equal(result1, result2);
+        }
+
+        
+        
         [Fact]
         public async Task ImportWorkflow_ShouldImportAndPreserveDataCorrectly()
         {

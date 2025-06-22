@@ -22,4 +22,8 @@
     <None Include="Data\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="Unit\**\*.cs" />
+  </ItemGroup>
+
 </Project>
