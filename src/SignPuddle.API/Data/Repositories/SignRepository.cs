@@ -7,12 +7,12 @@ namespace SignPuddle.API.Data
     public interface ISignRepository
     {
         Task<IEnumerable<Sign>> GetAllAsync();
-        Task<Sign?> GetByIdAsync(Guid id);
+        Task<Sign?> GetByIdAsync(string id);
         Task<IEnumerable<Sign>> GetByDictionaryIdAsync(string dictionaryId);
         Task<IEnumerable<Sign>> SearchByGlossAsync(string searchTerm);
         Task<Sign> CreateAsync(Sign sign);
         Task<Sign?> UpdateAsync(Sign sign);
-        Task<bool> DeleteAsync(Guid id);
+        Task<bool> DeleteAsync(string id);
         IQueryable<Sign> BuildSearchQuery(SignSearchParameters parameters);
         Task<List<Sign>> ExecuteSearchQueryAsync(IQueryable<Sign> query, int? page = null, int? pageSize = null);
         Task<int> CountSearchResultsAsync(IQueryable<Sign> query);
@@ -32,7 +32,7 @@ namespace SignPuddle.API.Data
             return await _context.Signs.Include(s => s.Dictionary).ToListAsync();
         }
 
-        public async Task<Sign?> GetByIdAsync(Guid id)
+        public async Task<Sign?> GetByIdAsync(string id)
         {
             return await _context.Signs
                 .Include(s => s.Dictionary)
@@ -53,12 +53,7 @@ namespace SignPuddle.API.Data
                 .ToListAsync();
         }
 
-        public async Task<Sign> CreateAsync(Sign sign)
-        {
-            _context.Signs.Add(sign);
-            await _context.SaveChangesAsync();
-            return sign;
-        }
+
 
         public async Task<Sign?> UpdateAsync(Sign sign)
         {
@@ -74,7 +69,7 @@ namespace SignPuddle.API.Data
             return existingSign;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(string id)
         {
             var sign = await _context.Signs.FindAsync(id);
             if (sign == null)
@@ -121,6 +116,32 @@ namespace SignPuddle.API.Data
                 DictionaryId = entity.DictionaryId,
                 Fsw = entity.Fsw
             };
+        }
+
+        public async Task<IEnumerable<Sign>> GetSignsByDictionaryAsync(Guid dictionaryId)
+        {
+            var entities = await _context.Signs
+                .Where(s => s.PuddleId == dictionaryId.ToString())
+                .ToListAsync();
+            return entities;
+        }
+
+        public async Task<Sign> CreateAsync(Sign sign)
+        {
+            var entity = new Sign
+            {
+                Id = sign.Id,
+                PuddleSignId = sign.PuddleSignId,
+                Gloss = sign.Gloss,
+                DictionaryId = sign.DictionaryId,
+                Fsw = sign.Fsw,
+                PuddleId = sign.PuddleId,
+                Created = DateTime.UtcNow,
+                Updated = DateTime.UtcNow
+            };
+            _context.Signs.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
     }
 }
