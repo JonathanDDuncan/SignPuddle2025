@@ -24,7 +24,7 @@ namespace SignPuddle.API.Data
             // Configure relationships and indexes
             modelBuilder.Entity<Sign>()
                 .ToContainer("Signs")
-                .HasPartitionKey(s => s.PuddleId)
+                .HasPartitionKey(s => s.DictionaryId)
                 .HasNoDiscriminator();
 
             modelBuilder.Entity<Sign>()
