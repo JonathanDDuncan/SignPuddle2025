@@ -58,9 +58,15 @@ namespace SignPuddle.API.Controllers
                 Dictionary savedDictionary;
                 List<SignPuddle.API.Models.Sign> updatedSigns;
                 string ownerId = "signpuddle-import";
+                var alreadyUptoDate = 0;
+                List<SignPuddle.API.Models.SpmlEntry> skippedEntries = [];
+                List<string> errors = [];
                 if (existingDictionary != null)
                 {
-                    var (signsToAdd, signsToUpdate) = await MergeInSPML(existingDictionary, spmlDocument);
+                    var (signsToAdd, signsToUpdate, alreadyUptoDate1, skippedEntries1, errors1) = await MergeInSPML(existingDictionary, spmlDocument);
+                    alreadyUptoDate = alreadyUptoDate1;
+                    skippedEntries = skippedEntries1;
+                    errors = errors1;
                     // Update existing dictionary
 
                     foreach (var sign in signsToAdd)
@@ -95,9 +101,14 @@ namespace SignPuddle.API.Controllers
                 {
                     Dictionary = savedDictionary,
                     UpdatedSigns = updatedSigns,
+                    AlreadyUptoDate = alreadyUptoDate,
                     OriginalPuddleId = spmlDocument.PuddleId,
                     ImportedAt = DateTime.UtcNow,
-                    TotalEntries = spmlDocument.Entries.Count
+                    TotalEntries = spmlDocument.Entries.Count,
+                    MissingEntries = spmlDocument.Entries.Count - (alreadyUptoDate + updatedSigns.Count),
+                    SkippedEntries = skippedEntries,
+                    SkippedCount = skippedEntries.Count,
+                    Errors = errors
                 };
 
                 return Ok(result);
@@ -180,7 +191,7 @@ namespace SignPuddle.API.Controllers
         /// Returns (signsToAdd, signsToUpdate).
         /// </summary>
         private async Task<(List<SignPuddle.API.Models.Sign> signsToAdd,
-        List<SignPuddle.API.Models.Sign> signsToUpdate)>
+        List<SignPuddle.API.Models.Sign> signsToUpdate, int alreadyUptoDate, List<SpmlEntry> skippedEntries, List<string> errors)>
         MergeInSPML(SignPuddle.API.Models.Dictionary existingDictionary, SpmlDocument spmlDocument)
         {
             // Get all existing signs for this dictionary
@@ -189,60 +200,87 @@ namespace SignPuddle.API.Controllers
 
             var signsToAdd = new List<SignPuddle.API.Models.Sign>();
             var signsToUpdate = new List<SignPuddle.API.Models.Sign>();
-
+            var alreadyUptoDate = 0;
+            var skippedEntries = new List<SpmlEntry>();
+            var errors = new List<string>();
             foreach (var entry in spmlDocument.Entries)
             {
-                if (!entry.EntryId.HasValue || string.IsNullOrWhiteSpace(entry.Fsw) || entry.Gloss == null || entry.Gloss.Count == 0)
-                    continue;
-                var puddleSignId = entry.EntryId.Value;
-                if (existingSignsDict.TryGetValue(puddleSignId, out var existingSign))
+                try
                 {
-                    // Update existing sign if any field has changed
-                    bool needsUpdate = false;
-                    if (existingSign.Fsw != entry.Fsw) needsUpdate = true;
-                    // Compare Gloss as sets
-                    if (!existingSign.Gloss.ToHashSet().SetEquals(entry.Gloss)) needsUpdate = true;
-                    if (existingSign.Description != entry.Text) needsUpdate = true;
-                    if (needsUpdate)
+
+
+
+                    if (!entry.EntryId.HasValue || string.IsNullOrWhiteSpace(entry.Fsw) || entry.Gloss == null || entry.Gloss.Count == 0)
                     {
-                        existingSign.Created = entry.Created;
-                        existingSign.Fsw = entry.Fsw;
-                        existingSign.Gloss = entry.Gloss;
-                        existingSign.Description = entry.Text;
-                        existingSign.Updated = entry.Modified;
-                        existingSign.UpdatedBy = entry.User;
-                        signsToUpdate.Add(existingSign);
+                        skippedEntries.Add(entry);
+                        continue;
+                    }
+
+                    var puddleSignId = entry.EntryId.Value;
+                    if (existingSignsDict.TryGetValue(puddleSignId, out var existingSign))
+                    {
+                        // Update existing sign if any field has changed
+                        bool needsUpdate = false;
+                        if (existingSign.Fsw != entry.Fsw) needsUpdate = true;
+                        // Compare Gloss as sets
+                        if (!existingSign.Gloss.ToHashSet().SetEquals(entry.Gloss)) needsUpdate = true;
+                        if (existingSign.Description != entry.Text) needsUpdate = true;
+                        if (needsUpdate)
+                        {
+                            existingSign.Created = entry.Created;
+                            existingSign.Fsw = entry.Fsw;
+                            existingSign.Gloss = entry.Gloss;
+                            existingSign.Description = entry.Text;
+                            existingSign.Updated = entry.Modified;
+                            existingSign.UpdatedBy = entry.User;
+                            signsToUpdate.Add(existingSign);
+                        }
+                        else
+                        {
+                            alreadyUptoDate++;
+                        }
+                    }
+                    else
+                    {
+                        // Add new sign
+                        var newSign = new SignPuddle.API.Models.Sign
+                        {
+                            DictionaryId = existingDictionary.Id,
+                            PuddleSignId = puddleSignId,
+                            PuddleId = spmlDocument.PuddleId.ToString(),
+                            Fsw = entry.Fsw ?? string.Empty,
+                            Gloss = entry.Gloss,
+                            Description = entry.Text,
+                            Created = entry.Created,
+                            Updated = entry.Modified,
+                            CreatedBy = entry.User,
+                            UpdatedBy = entry.User
+                        };
+                        signsToAdd.Add(newSign);
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    // Add new sign
-                    var newSign = new SignPuddle.API.Models.Sign
-                    {
-                        DictionaryId = existingDictionary.Id,
-                        PuddleSignId = puddleSignId,
-                        PuddleId = spmlDocument.PuddleId.ToString(),
-                        Fsw = entry.Fsw ?? string.Empty,
-                        Gloss = entry.Gloss,
-                        Description = entry.Text,
-                        Created = entry.Created,
-                        Updated = entry.Modified,
-                        CreatedBy = entry.User,
-                        UpdatedBy = entry.User
-                    };
-                    signsToAdd.Add(newSign);
+                    errors.Add(ex.ToString());
+                    skippedEntries.Add(entry);
+                    continue;
                 }
             }
-            return (signsToAdd, signsToUpdate);
+            return (signsToAdd, signsToUpdate, alreadyUptoDate, skippedEntries, errors);
         }
     }
     public class SpmlImportResult
     {
         public Dictionary? Dictionary { get; set; }
-        public List<SignPuddle.API.Models.Sign> UpdatedSigns { get; set; } = new List<SignPuddle.API.Models.Sign>();
+        public List<SignPuddle.API.Models.Sign> UpdatedSigns { get; set; } = [];
         public int OriginalPuddleId { get; set; }
         public DateTime ImportedAt { get; set; }
         public int TotalEntries { get; set; }
+        public int AlreadyUptoDate { get; set; }
+        public int MissingEntries { get; set; }
+        public List<SpmlEntry> SkippedEntries { get;   set; } =[];
+        public int SkippedCount { get;   set; }
+        public List<string> Errors { get; set; } = [];
     }
 
     public class SpmlPreview
