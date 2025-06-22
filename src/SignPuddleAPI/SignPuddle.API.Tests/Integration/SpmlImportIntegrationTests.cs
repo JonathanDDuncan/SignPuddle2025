@@ -57,7 +57,7 @@ namespace SignPuddle.API.Tests.Integration
             // Specific sign data and timestamps
             var testZeroSign = signs.First(s => s.Gloss[0] == "test zero");
             Assert.Equal("AS17620S15a18S22a02M523x514S15a18478x487S22a02508x495S17620491x494", testZeroSign.Fsw);
-            Assert.Equal("we are testing SignPuddle 1.6", testZeroSign.SgmlText);
+            Assert.Equal("we are testing SignPuddle 1.6", testZeroSign.Description);
             Assert.Equal(new DateTime(2011, 7, 20, 17, 39, 2, DateTimeKind.Utc), testZeroSign.Created);
             Assert.Equal(new DateTime(2011, 7, 20, 17, 42, 9, DateTimeKind.Utc), testZeroSign.Updated);
 
@@ -72,7 +72,7 @@ namespace SignPuddle.API.Tests.Integration
 
             // Content statistics
             Assert.Equal(10, signs.Count(s => s.Gloss.Count > 0 && !string.IsNullOrEmpty(s.Gloss[0])));
-            Assert.Equal(2, signs.Count(s => !string.IsNullOrEmpty(s.SgmlText)));
+            Assert.Equal(2, signs.Count(s => !string.IsNullOrEmpty(s.Description)));
             Assert.Equal(1, spmlDocument.Entries.Count(e => !string.IsNullOrEmpty(e.Video)));
             Assert.Equal(6, spmlDocument.Entries.Count(e => !string.IsNullOrEmpty(e.Source)));
 

@@ -165,7 +165,7 @@ namespace SignPuddle.API.Tests.Services
             Assert.Equal("AS17620S15a18S22a02M523x514S15a18478x487S22a02508x495S17620491x494", firstSign.Fsw);
             Assert.Equal("test zero", firstSign.Gloss[0]);
             Assert.Equal(dictionaryId, firstSign.DictionaryId);
-            Assert.Equal("we are testing SignPuddle 1.6", firstSign.SgmlText);
+            Assert.Equal("we are testing SignPuddle 1.6", firstSign.Description);
             Assert.Equal("Val", firstSign.CreatedBy);
             Assert.Equal("Val", firstSign.UpdatedBy);
 

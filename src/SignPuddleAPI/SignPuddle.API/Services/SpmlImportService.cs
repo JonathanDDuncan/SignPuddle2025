@@ -85,7 +85,7 @@ namespace SignPuddle.API.Services
                     PuddleId = spmlDocument.PuddleId.ToString(),
                     Fsw = entry.Fsw ?? string.Empty,
                     Gloss = entry.Gloss,
-                    SgmlText = entry.Text,
+                    Description = entry.Text,
                     Created = entry.Created,
                     Updated = entry.Modified,
                     CreatedBy = entry.User,

@@ -19,12 +19,13 @@ namespace SignPuddle.API.Models
 
         public Dictionary? Dictionary { get; set; }
         
-        public string? SgmlText { get; set; } // Sign text (if part of a sequence)
+        public string? Description { get; set; } 
         
         public DateTime Created { get; set; } 
         public DateTime Updated { get; set; } 
         
         public string? CreatedBy { get; set; }
         public string? UpdatedBy { get; set; }
+ 
     }
 }

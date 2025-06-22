@@ -202,13 +202,13 @@ namespace SignPuddle.API.Controllers
                     if (existingSign.Fsw != entry.Fsw) needsUpdate = true;
                     // Compare Gloss as sets
                     if (!existingSign.Gloss.ToHashSet().SetEquals(entry.Gloss)) needsUpdate = true;
-                    if (existingSign.SgmlText != entry.Text) needsUpdate = true;
+                    if (existingSign.Description != entry.Text) needsUpdate = true;
                     if (needsUpdate)
                     {
                         existingSign.Created = entry.Created;
                         existingSign.Fsw = entry.Fsw;
                         existingSign.Gloss = entry.Gloss;
-                        existingSign.SgmlText = entry.Text;
+                        existingSign.Description = entry.Text;
                         existingSign.Updated = entry.Modified;
                         existingSign.UpdatedBy = entry.User;
                         signsToUpdate.Add(existingSign);
@@ -224,7 +224,7 @@ namespace SignPuddle.API.Controllers
                         PuddleId = spmlDocument.PuddleId.ToString(),
                         Fsw = entry.Fsw ?? string.Empty,
                         Gloss = entry.Gloss,
-                        SgmlText = entry.Text,
+                        Description = entry.Text,
                         Created = entry.Created,
                         Updated = entry.Modified,
                         CreatedBy = entry.User,
