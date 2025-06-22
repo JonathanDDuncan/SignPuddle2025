@@ -6,7 +6,7 @@ namespace SignPuddle.API.Models
     public class Sign
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         
         public int PuddleSignId { get; set; }
         

@@ -1,11 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace SignPuddle.API.Models
 {    public class Dictionary
     {
         [Key]
-        public required string Id { get; set; }
-        
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
         public string? PuddleId { get; set; }
         public string? PuddleType { get; set; }
         [Required]
