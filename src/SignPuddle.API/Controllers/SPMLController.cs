@@ -195,10 +195,11 @@ namespace SignPuddle.API.Controllers
                     if (existingSign.SgmlText != entry.Text) needsUpdate = true;
                     if (needsUpdate)
                     {
+                        existingSign.Created = entry.Created;
                         existingSign.Fsw = entry.Fsw;
                         existingSign.Gloss = entry.Gloss;
                         existingSign.SgmlText = entry.Text;
-                        existingSign.Updated = DateTime.UtcNow;
+                        existingSign.Updated = entry.Modified;
                         existingSign.UpdatedBy = entry.User;
                         signsToUpdate.Add(existingSign);
                     }

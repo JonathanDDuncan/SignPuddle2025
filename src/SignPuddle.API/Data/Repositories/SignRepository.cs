@@ -128,20 +128,9 @@ namespace SignPuddle.API.Data
 
         public async Task<Sign> CreateAsync(Sign sign)
         {
-            var entity = new Sign
-            {
-                Id = sign.Id,
-                PuddleSignId = sign.PuddleSignId,
-                Gloss = sign.Gloss,
-                DictionaryId = sign.DictionaryId,
-                Fsw = sign.Fsw,
-                PuddleId = sign.PuddleId,
-                Created = DateTime.UtcNow,
-                Updated = DateTime.UtcNow
-            };
-            _context.Signs.Add(entity);
+            _context.Signs.Add(sign);
             await _context.SaveChangesAsync();
-            return entity;
+            return sign;
         }
     }
 }

@@ -48,34 +48,27 @@ namespace SignPuddle.API.Services
 
         public async Task<Sign> CreateSignAsync(Sign sign, string userId)
         {
-            sign.CreatedBy = userId;
-            sign.UpdatedBy = userId;
-            sign.Created = DateTime.UtcNow;
-            sign.Updated = DateTime.UtcNow;
-            
+            sign.CreatedBy ??= userId;
+            sign.UpdatedBy ??= userId;
+
             return await _signRepository.CreateAsync(sign);
         }
 
         public async Task<Sign?> UpdateSignAsync(Sign sign)
         {
-            sign.Updated = DateTime.UtcNow;
             
             return await _signRepository.UpdateAsync(sign);
         }
 
         public async Task<Sign?> UpdateSignAsync(Sign sign, string userId)
         {
-            sign.UpdatedBy = userId;
-            sign.Updated = DateTime.UtcNow;
+            sign.UpdatedBy ??= userId;
 
             return await _signRepository.UpdateAsync(sign);
         }
 
         public async Task<bool> DeleteSignAsync(string id, string userId)
         {
-            // Optional: Add permission check here
-            // var user = await _userService.GetUserByIdAsync(userId);
-            
             return await _signRepository.DeleteAsync(id);
         }
     }

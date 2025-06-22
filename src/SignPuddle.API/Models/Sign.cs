@@ -21,8 +21,8 @@ namespace SignPuddle.API.Models
         
         public string? SgmlText { get; set; } // Sign text (if part of a sequence)
         
-        public DateTime Created { get; set; } = DateTime.UtcNow;
-        public DateTime Updated { get; set; } = DateTime.UtcNow;
+        public DateTime Created { get; set; } 
+        public DateTime Updated { get; set; } 
         
         public string? CreatedBy { get; set; }
         public string? UpdatedBy { get; set; }
