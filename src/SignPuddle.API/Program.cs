@@ -191,6 +191,13 @@ app.UseCors("CorsPolicy");
 app.UseAuthorization();
 app.MapControllers();
 
+// Ensure Cosmos DB containers are created at startup
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<SignPuddle.API.Data.ApplicationDbContext>();
+    await dbContext.Database.EnsureCreatedAsync();
+}
+
 app.Run();
 
 // Make Program class accessible for testing

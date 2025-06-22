@@ -18,7 +18,10 @@ namespace SignPuddle.API.Data
             base.OnModelCreating(modelBuilder);
 
             // Configure relationships and indexes
-            modelBuilder.Entity<Sign>();
+            modelBuilder.Entity<Sign>()
+                .ToContainer("Signs")
+                .HasPartitionKey(s => s.PuddleId)
+                .HasNoDiscriminator();
 
             modelBuilder.Entity<Sign>()
                 .HasOne(s => s.Dictionary)
