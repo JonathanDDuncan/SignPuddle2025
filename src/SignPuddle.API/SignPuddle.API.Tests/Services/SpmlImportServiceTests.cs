@@ -82,7 +82,7 @@ namespace SignPuddle.API.Tests.Services
             Assert.Equal("Val", firstEntry.User);
             Assert.Equal(1311183542, firstEntry.CreatedTimestamp);
             Assert.Equal(1311183729, firstEntry.ModifiedTimestamp);
-            Assert.Equal(2, firstEntry.Terms.Count);
+            Assert.Equal(3, firstEntry.Terms.Count);
             Assert.Equal("AS17620S15a18S22a02M523x514S15a18478x487S22a02508x495S17620491x494", firstEntry.Terms[0]);
             Assert.Equal("test zero", firstEntry.Terms[1]);
             Assert.Equal("we are testing SignPuddle 1.6", firstEntry.Text);
