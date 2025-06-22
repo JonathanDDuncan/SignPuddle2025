@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace SignPuddle.API.Models
@@ -5,10 +6,12 @@ namespace SignPuddle.API.Models
     public class Sign
     {
         [Key]
+        public Guid Id { get; set; } = Guid.NewGuid();
+        
         public int PuddleSignId { get; set; }
         
          public string? DictionaryId { get; set; }
-        public string? PuddleId { get; set; }
+         public string? PuddleId { get; set; }
    
         public string? Fsw { get; set; } = string.Empty; // Formal SignWriting notation
         

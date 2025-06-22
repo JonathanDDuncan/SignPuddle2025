@@ -17,6 +17,10 @@ namespace SignPuddle.API.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Configure Sign primary key
+            modelBuilder.Entity<Sign>()
+                .HasKey(s => s.Id);
+
             // Configure relationships and indexes
             modelBuilder.Entity<Sign>()
                 .ToContainer("Signs")

@@ -7,12 +7,12 @@ namespace SignPuddle.API.Data
     public interface ISignRepository
     {
         Task<IEnumerable<Sign>> GetAllAsync();
-        Task<Sign?> GetByIdAsync(int id);
+        Task<Sign?> GetByIdAsync(Guid id);
         Task<IEnumerable<Sign>> GetByDictionaryIdAsync(string dictionaryId);
         Task<IEnumerable<Sign>> SearchByGlossAsync(string searchTerm);
         Task<Sign> CreateAsync(Sign sign);
         Task<Sign?> UpdateAsync(Sign sign);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(Guid id);
         IQueryable<Sign> BuildSearchQuery(SignSearchParameters parameters);
         Task<List<Sign>> ExecuteSearchQueryAsync(IQueryable<Sign> query, int? page = null, int? pageSize = null);
         Task<int> CountSearchResultsAsync(IQueryable<Sign> query);
@@ -32,11 +32,11 @@ namespace SignPuddle.API.Data
             return await _context.Signs.Include(s => s.Dictionary).ToListAsync();
         }
 
-        public async Task<Sign?> GetByIdAsync(int id)
+        public async Task<Sign?> GetByIdAsync(Guid id)
         {
             return await _context.Signs
                 .Include(s => s.Dictionary)
-                .FirstOrDefaultAsync(s => s.PuddleSignId == id);
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task<IEnumerable<Sign>> GetByDictionaryIdAsync(string dictionaryId)
@@ -62,7 +62,7 @@ namespace SignPuddle.API.Data
 
         public async Task<Sign?> UpdateAsync(Sign sign)
         {
-            var existingSign = await _context.Signs.FindAsync(sign.PuddleSignId);
+            var existingSign = await _context.Signs.FindAsync(sign.Id);
             if (existingSign == null)
             {
                 return null;
@@ -74,7 +74,7 @@ namespace SignPuddle.API.Data
             return existingSign;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             var sign = await _context.Signs.FindAsync(id);
             if (sign == null)
@@ -115,6 +115,7 @@ namespace SignPuddle.API.Data
         {
             return new SignDto
             {
+                Id = entity.Id,
                 PuddleSignId = entity.PuddleSignId,
                 Gloss = entity.Gloss,
                 DictionaryId = entity.DictionaryId,

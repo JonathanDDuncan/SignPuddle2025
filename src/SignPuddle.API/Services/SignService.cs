@@ -6,13 +6,13 @@ namespace SignPuddle.API.Services
     public interface ISignService
     {
         Task<IEnumerable<Sign>> GetAllSignsAsync();
-        Task<Sign?> GetSignByIdAsync(int id);
+        Task<Sign?> GetSignByIdAsync(Guid id);
         Task<IEnumerable<Sign>> GetSignsByDictionaryAsync(string dictionaryId);
         Task<IEnumerable<Sign>> SearchSignsByGlossAsync(string searchTerm);
         Task<Sign> CreateSignAsync(Sign sign, string userId);
         Task<Sign?> UpdateSignAsync(Sign sign, string userId);
         Task<Sign?> UpdateSignAsync(Sign sign);
-        Task<bool> DeleteSignAsync(int id, string userId);
+        Task<bool> DeleteSignAsync(Guid id, string userId);
     }
 
     public class SignService : ISignService
@@ -31,7 +31,7 @@ namespace SignPuddle.API.Services
             return await _signRepository.GetAllAsync();
         }
 
-        public async Task<Sign?> GetSignByIdAsync(int id)
+        public async Task<Sign?> GetSignByIdAsync(Guid id)
         {
             return await _signRepository.GetByIdAsync(id);
         }
@@ -71,7 +71,7 @@ namespace SignPuddle.API.Services
             return await _signRepository.UpdateAsync(sign);
         }
 
-        public async Task<bool> DeleteSignAsync(int id, string userId)
+        public async Task<bool> DeleteSignAsync(Guid id, string userId)
         {
             // Optional: Add permission check here
             // var user = await _userService.GetUserByIdAsync(userId);
