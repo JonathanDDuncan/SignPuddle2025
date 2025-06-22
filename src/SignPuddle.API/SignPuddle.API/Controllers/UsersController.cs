@@ -37,12 +37,6 @@ namespace SignPuddle.API.Controllers
             if (user == null)
                 return NotFound();
             return Ok((string?)JsonSerializer.Serialize(user));
-            return new ContentResult
-            {
-                Content = JsonSerializer.Serialize(user),
-                ContentType = "application/json",
-                StatusCode = 200
-            };
         }
 
         [HttpPost]
@@ -57,11 +51,8 @@ namespace SignPuddle.API.Controllers
 
             _users.Add(newUser);
 
-            Response.Headers.Add("Location", $"/api/users/{newUser.Id}");
-
-
-            return CreatedAtAction(nameof(GetUser), new { id = newUser.Id }, (string?)JsonSerializer.Serialize(newUser));
-
+            Response.Headers.Append("Location", $"/api/users/{newUser.Id}");
+            return Created($"/api/users/{newUser.Id}", newUser);
         }
     }
 
