@@ -9,6 +9,7 @@ using SignPuddle.API.Services;
 
 namespace SignPuddle.API.Tests.Services
 {
+    [Collection("Sequential")]
     public class SpmlImportServiceTests
     {
         private readonly SpmlImportService _spmlImportService;

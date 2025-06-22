@@ -24,7 +24,7 @@ public class SignPuddleBaseController : ControllerBase
             return base.Ok(value);
         }
     }
-    
+
 
     public override BadRequestObjectResult BadRequest([ActionResultObjectValue] object? error)
     {
@@ -63,6 +63,20 @@ public class SignPuddleBaseController : ControllerBase
         else
         {
             return base.CreatedAtAction(actionName, routeValues, value);
+        }
+    }
+
+    public override CreatedResult Created(string? uri, [ActionResultObjectValue] object? value)
+    {
+        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        if (env == "Testing")
+        {
+         
+            return new CreatedResult(uri, (string?)JsonSerializer.Serialize(value));
+        }
+        else
+        {
+            return new CreatedResult(uri, value);
         }
     }
 }

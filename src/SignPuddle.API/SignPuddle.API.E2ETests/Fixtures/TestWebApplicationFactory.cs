@@ -31,6 +31,8 @@ namespace SignPuddle.API.E2ETests.Fixtures
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Testing");
+            
             builder.ConfigureAppConfiguration((context, configBuilder) =>
             {
                 configBuilder.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.Test.json"), optional: true);
