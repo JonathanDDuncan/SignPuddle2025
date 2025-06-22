@@ -12,7 +12,8 @@ namespace SignPuddle.API.Data
         public DbSet<Sign> Signs { get; set; } = default!;
         public DbSet<Dictionary> Dictionaries { get; set; } = default!;
         public DbSet<User> Users { get; set; } = default!;
-        public DbSet<SpmlDocumentEntity> SpmlDocuments { get; set; } = default!; protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public DbSet<SpmlDocumentEntity> SpmlDocuments { get; set; } = default!;
+         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
@@ -50,6 +51,16 @@ namespace SignPuddle.API.Data
 
             modelBuilder.Entity<SpmlDocumentEntity>()
                 .Property(e => e.OwnerId);
+
+            // Configure Dictionary container
+            modelBuilder.Entity<Dictionary>()
+                .ToContainer("Dictionaries")
+                .HasNoDiscriminator();
+
+            // Configure User container
+            modelBuilder.Entity<User>()
+                .ToContainer("Users")
+                .HasNoDiscriminator();
         }
     }
 }

@@ -35,7 +35,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 // Configure CosmosDB
 string CosmosAccountEndpoint() => builder.Configuration["CosmosDb:AccountEndpoint"] ?? "";
 string CosmosAccountKey() => builder.Configuration["CosmosDb:AccountKey"] ?? "";
-string DatabaseName() => builder.Configuration["CosmosDb:DatabaseName"] ?? "SignPuddle";
+string DatabaseName() => builder.Configuration["CosmosDb:DatabaseName"] ?? "SignPuddleDatabase";
 
 if (!builder.Environment.IsEnvironment("Testing"))
 {
