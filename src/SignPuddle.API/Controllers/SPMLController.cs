@@ -200,7 +200,8 @@ namespace SignPuddle.API.Controllers
                     // Update existing sign if any field has changed
                     bool needsUpdate = false;
                     if (existingSign.Fsw != entry.Fsw) needsUpdate = true;
-                    if (existingSign.Gloss != entry.Gloss) needsUpdate = true;
+                    // Compare Gloss as sets
+                    if (!existingSign.Gloss.ToHashSet().SetEquals(entry.Gloss)) needsUpdate = true;
                     if (existingSign.SgmlText != entry.Text) needsUpdate = true;
                     if (needsUpdate)
                     {

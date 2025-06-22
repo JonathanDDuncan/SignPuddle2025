@@ -64,7 +64,7 @@ namespace SignPuddle.API.Data
             }
 
             _context.Entry(existingSign).CurrentValues.SetValues(sign);
-            existingSign.Updated = DateTime.UtcNow;
+            
             await _context.SaveChangesAsync();
             return existingSign;
         }
