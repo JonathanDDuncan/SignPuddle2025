@@ -84,7 +84,7 @@ Svelte SPA ←→ C# Web API ←→ CosmosDB
 Dictionaries: Id, Name, Language, OwnerId, Created
 Signs: Id, DictionaryId, Fsw, Gloss, Created
 Users: Id, Username, Email, SecurityLevel
-Symbols: Key, Category, Group, Name, SvgPath
+-- Symbols are rendered dynamically via the API's RenderService; no database table
 ```
 
 ## Migration Strategy

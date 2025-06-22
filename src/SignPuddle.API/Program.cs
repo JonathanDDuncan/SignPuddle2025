@@ -106,7 +106,6 @@ builder.Services.AddScoped<ISpmlPersistenceService, SpmlPersistenceService>();
 
 // Register repositories
 builder.Services.AddScoped<ISignRepository, SignRepository>();
-builder.Services.AddScoped<ISymbolRepository, SymbolRepository>();
 builder.Services.AddScoped<IDictionaryRepository, DictionaryRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ISpmlRepository, SpmlRepository>();

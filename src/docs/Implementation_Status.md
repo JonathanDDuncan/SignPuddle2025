@@ -56,7 +56,6 @@ This document tracks the implementation status of the SignPuddle 2.0 modernizati
 - ✅ Sign model with FSW support (`Sign.cs`)
 - ✅ Sign service with CRUD operations (`SignService.cs`)
 - ✅ Format conversion services (`FormatService.cs`)
-- ✅ Symbol service and controller (`SymbolService.cs`, `SymbolController.cs`)
 - ✅ Render service for sign visualization (`RenderService.cs`)
 
 **Frontend Implementation:**
@@ -64,7 +63,6 @@ This document tracks the implementation status of the SignPuddle 2.0 modernizati
 - ✅ Symbol palette component (`SymbolPalette.svelte`)
 - ✅ Sign controls component (`SignControls.svelte`)
 - ✅ Sign store for state management (`signStore.js`)
-- ✅ Symbol store for palette state (`symbolStore.js`)
 - 🔄 Canvas-based sign editor with basic functionality
 
 **User Stories Status:**
@@ -187,7 +185,7 @@ This document tracks the implementation status of the SignPuddle 2.0 modernizati
 
 #### ✅ **COMPLETED** (75%)
 - ✅ Entity Framework Core models
-- ✅ User, Sign, Dictionary, Symbol entities
+- ✅ User, Sign, Dictionary, entities
 - ✅ Proper relationships and constraints
 - ✅ Repository pattern implementation
 - ⚠️ Missing advanced indexing

@@ -10,7 +10,6 @@ namespace SignPuddle.API.Data
         {
         }
         public DbSet<Sign> Signs { get; set; } = default!;
-        public DbSet<Symbol> Symbols { get; set; } = default!;
         public DbSet<Dictionary> Dictionaries { get; set; } = default!;
         public DbSet<User> Users { get; set; } = default!;
         public DbSet<SpmlDocumentEntity> SpmlDocuments { get; set; } = default!; protected override void OnModelCreating(ModelBuilder modelBuilder)

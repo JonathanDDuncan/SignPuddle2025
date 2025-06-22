@@ -412,3 +412,9 @@ export default defineConfig({
         },
     },
 })
+
+## Note: Symbol Rendering
+
+Symbols are generated dynamically by the API's RenderService. They are not saved or retrieved from a database.
+
+---
