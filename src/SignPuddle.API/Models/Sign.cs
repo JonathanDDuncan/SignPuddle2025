@@ -14,8 +14,8 @@ namespace SignPuddle.API.Models
          public string? PuddleId { get; set; }
    
         public string? Fsw { get; set; } = string.Empty; // Formal SignWriting notation
-        
-        public string? Gloss { get; set; } // Text translation/meaning
+
+        public List<string> Gloss { get; set; } = new List<string>(); // Text translation/meaning
 
         public Dictionary? Dictionary { get; set; }
         

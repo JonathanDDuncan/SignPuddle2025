@@ -210,7 +210,7 @@ namespace SignPuddle.API.Models
         public string? Fsw => Terms.FirstOrDefault(t => FswValidation.IsValidFswSign(t));
 
         // Extract gloss (first non-FSW term)
-        public string? Gloss => Terms.FirstOrDefault(t => !FswValidation.IsValidFswSign(t));
+        public List<string> Gloss => Terms.Where(t => !FswValidation.IsValidFswSign(t)).ToList();
 
         // Backward compatibility properties
         public string? Text => TextElements.FirstOrDefault();

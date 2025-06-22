@@ -2,6 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using SignPuddle.API.Data;
 using SignPuddle.API.Models;
 using SignPuddle.API.Services;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace SignPuddle.API.Controllers
 {
@@ -144,18 +150,21 @@ namespace SignPuddle.API.Controllers
                     Created = spmlDocument.Created,
                     Modified = spmlDocument.Modified,
                     TotalEntries = spmlDocument.Entries.Count,
-                    EntriesWithGloss = spmlDocument.Entries.Count(e => !string.IsNullOrEmpty(e.Gloss)),
+                    EntriesWithGloss = spmlDocument.Entries.Count(e => e.Gloss != null && e.Gloss.Count > 0),
                     EntriesWithText = spmlDocument.Entries.Count(e => !string.IsNullOrEmpty(e.Text)),
                     EntriesWithVideo = spmlDocument.Entries.Count(e => !string.IsNullOrEmpty(e.Video)),
                     EntriesWithSource = spmlDocument.Entries.Count(e => !string.IsNullOrEmpty(e.Source)),
-                    SampleEntries = spmlDocument.Entries.Take(5).Select(e => new SpmlEntryPreview
-                    {
-                        Id = e.EntryId ?? 0,
-                        FswNotation = e.Fsw,
-                        Gloss = e.Gloss,
-                        User = e.User,
-                        Created = e.Created
-                    }).ToList()
+                    SampleEntries = spmlDocument.Entries
+                                  .Take(5)
+                                  .Select(e => new SpmlEntryPreview
+                                  {
+                                      Id = e.EntryId ?? 0,
+                                      FswNotation = e.Fsw,
+                                      Gloss = e.Gloss,
+                                      User = e.User,
+                                      Created = e.Created
+                                  })
+                                  .ToList()
                 };
 
                 return Ok(preview);
@@ -183,7 +192,7 @@ namespace SignPuddle.API.Controllers
 
             foreach (var entry in spmlDocument.Entries)
             {
-                if (!entry.EntryId.HasValue || string.IsNullOrWhiteSpace(entry.Fsw) || string.IsNullOrWhiteSpace(entry.Gloss))
+                if (!entry.EntryId.HasValue || string.IsNullOrWhiteSpace(entry.Fsw) || entry.Gloss == null || entry.Gloss.Count == 0)
                     continue;
                 var puddleSignId = entry.EntryId.Value;
                 if (existingSignsDict.TryGetValue(puddleSignId, out var existingSign))
@@ -254,7 +263,7 @@ namespace SignPuddle.API.Controllers
     {
         public int Id { get; set; }
         public string? FswNotation { get; set; }
-        public string? Gloss { get; set; }
+        public List<string>? Gloss { get; set; }
         public string User { get; set; } = string.Empty;
         public DateTime Created { get; set; }
     }

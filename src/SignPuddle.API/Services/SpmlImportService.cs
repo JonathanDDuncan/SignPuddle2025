@@ -75,7 +75,7 @@ namespace SignPuddle.API.Services
                     continue;
                 // Use the helper function for FSW validation
                 if (!IsValidFswSign(entry.Fsw) ||
-                    string.IsNullOrWhiteSpace(entry.Gloss))
+                    entry.Gloss == null || entry.Gloss.Count == 0 || string.IsNullOrWhiteSpace(entry.Gloss[0]))
                     continue; // Skip entries without proper FSW notation or gloss
 
                 var sign = new Sign

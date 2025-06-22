@@ -48,14 +48,14 @@ namespace SignPuddle.API.Tests.Integration
             var adminSigns = signs.Where(s => s.CreatedBy == "admin").ToList();
             var ipSign = signs.SingleOrDefault(s => s.CreatedBy == "174.59.122.20");
             Assert.NotNull(valSign);
-            Assert.Equal("test zero", valSign.Gloss);
-            Assert.Contains(adminSigns, s => s.Gloss == "infirmity");
-            Assert.Contains(adminSigns, s => s.Gloss == "DELAY");
+            Assert.Equal("test zero", valSign.Gloss[0]);
+            Assert.Contains(adminSigns, s => s.Gloss[0] == "infirmity");
+            Assert.Contains(adminSigns, s => s.Gloss[0] == "DELAY");
             Assert.NotNull(ipSign);
-            Assert.Equal("name", ipSign.Gloss);
+            Assert.Equal("name", ipSign.Gloss[0]);
 
             // Specific sign data and timestamps
-            var testZeroSign = signs.First(s => s.Gloss == "test zero");
+            var testZeroSign = signs.First(s => s.Gloss[0] == "test zero");
             Assert.Equal("AS17620S15a18S22a02M523x514S15a18478x487S22a02508x495S17620491x494", testZeroSign.Fsw);
             Assert.Equal("we are testing SignPuddle 1.6", testZeroSign.SgmlText);
             Assert.Equal(new DateTime(2011, 7, 20, 17, 39, 2, DateTimeKind.Utc), testZeroSign.Created);
@@ -71,7 +71,7 @@ namespace SignPuddle.API.Tests.Integration
             }
 
             // Content statistics
-            Assert.Equal(10, signs.Count(s => !string.IsNullOrEmpty(s.Gloss)));
+            Assert.Equal(10, signs.Count(s => s.Gloss.Count > 0 && !string.IsNullOrEmpty(s.Gloss[0])));
             Assert.Equal(2, signs.Count(s => !string.IsNullOrEmpty(s.SgmlText)));
             Assert.Equal(1, spmlDocument.Entries.Count(e => !string.IsNullOrEmpty(e.Video)));
             Assert.Equal(6, spmlDocument.Entries.Count(e => !string.IsNullOrEmpty(e.Source)));

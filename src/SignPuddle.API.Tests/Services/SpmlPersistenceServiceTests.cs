@@ -212,7 +212,7 @@ namespace SignPuddle.API.Tests.Services
             Assert.Equal(10, conversionResult.Signs.Count);
             var firstSign = conversionResult.Signs[0];
             Assert.Equal("AS17620S15a18S22a02M523x514S15a18478x487S22a02508x495S17620491x494", firstSign.Fsw);
-            Assert.Equal("test zero", firstSign.Gloss);
+            Assert.Equal("test zero", firstSign.Gloss[0]);
         }
 
         [Fact]

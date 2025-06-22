@@ -102,11 +102,11 @@ namespace SignPuddle.API.Tests.Services
             // Assert
             var testEntry = result.Entries[0];
             Assert.Equal("AS17620S15a18S22a02M523x514S15a18478x487S22a02508x495S17620491x494", testEntry.Fsw);
-            Assert.Equal("test zero", testEntry.Gloss);
+            Assert.Equal("test zero", testEntry.Gloss[0]);
 
             var delayEntry = result.Entries[2];
             Assert.Equal("AS1ce40S1ce48S2b800M523x537S1ce40501x507S1ce48478x507S2b800498x462", delayEntry.Fsw);
-            Assert.Equal("DELAY", delayEntry.Gloss);
+            Assert.Equal("DELAY", delayEntry.Gloss[0]);
         }
 
         [Fact]
@@ -163,14 +163,14 @@ namespace SignPuddle.API.Tests.Services
             var firstSign = signs[0];
             Assert.Equal(1, firstSign.PuddleSignId);
             Assert.Equal("AS17620S15a18S22a02M523x514S15a18478x487S22a02508x495S17620491x494", firstSign.Fsw);
-            Assert.Equal("test zero", firstSign.Gloss);
+            Assert.Equal("test zero", firstSign.Gloss[0]);
             Assert.Equal(dictionaryId, firstSign.DictionaryId);
             Assert.Equal("we are testing SignPuddle 1.6", firstSign.SgmlText);
             Assert.Equal("Val", firstSign.CreatedBy);
             Assert.Equal("Val", firstSign.UpdatedBy);
 
             // Test entry without gloss
-            var infirmitySign = signs.FirstOrDefault(s => s.Gloss == "infirmity");
+            var infirmitySign = signs.FirstOrDefault(s => s.Gloss != null && s.Gloss.Contains("infirmity"));
             Assert.NotNull(infirmitySign);
             Assert.Equal("AS1c500S1c509S31300S20500M541x560S31300482x482S1c500511x477S1c509475x523S20500498x549", infirmitySign.Fsw);
             Assert.Equal("admin", infirmitySign.CreatedBy);
@@ -201,7 +201,7 @@ namespace SignPuddle.API.Tests.Services
 
             // Assert
             Assert.Single(signs); // Only one sign should be created (the one with FSW)
-            Assert.Equal("valid sign", signs[0].Gloss);
+            Assert.Equal("valid sign", signs[0].Gloss[0]);
         }
 
         [Fact]
@@ -217,7 +217,7 @@ namespace SignPuddle.API.Tests.Services
             var delayEntry = result.Entries[2]; // Entry with id="3" (DELAY)
             Assert.Equal(3, delayEntry.EntryId);
             Assert.Equal("admin", delayEntry.User);
-            Assert.Equal("DELAY", delayEntry.Gloss);
+            Assert.Equal("DELAY", delayEntry.Gloss[0]);
             Assert.Equal("Delay, postpone, move forward in time", delayEntry.Text);
             Assert.Equal("Stuart Thiessen, Des Moines, IA", delayEntry.Source);
             Assert.Null(delayEntry.Video); // This entry doesn't have video

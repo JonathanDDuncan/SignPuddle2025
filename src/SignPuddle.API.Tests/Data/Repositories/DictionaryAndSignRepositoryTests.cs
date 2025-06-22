@@ -44,9 +44,9 @@ namespace SignPuddle.API.Tests.Data.Repositories
             var context = GetDbContext();
             context.Signs.AddRange(new List<Sign>
             {
-                new Sign { PuddleSignId = 1, Gloss = "cat", DictionaryId = "1", Fsw = "M100x100S2" },
-                new Sign { PuddleSignId = 2, Gloss = "dog", DictionaryId = "1", Fsw = "M200x200S3" },
-                new Sign { PuddleSignId = 3, Gloss = "apple", DictionaryId = "2", Fsw = "M300x300S4" }
+                new Sign { PuddleSignId = 1, Gloss = new List<string> { "cat" }, DictionaryId = "1", Fsw = "M100x100S2" },
+                new Sign { PuddleSignId = 2, Gloss = new List<string> { "dog" }, DictionaryId = "1", Fsw = "M200x200S3" },
+                new Sign { PuddleSignId = 3, Gloss = new List<string> { "apple" }, DictionaryId = "2", Fsw = "M300x300S4" }
             });
             context.SaveChanges();
             var repo = new SignRepository(context);
@@ -54,7 +54,7 @@ namespace SignPuddle.API.Tests.Data.Repositories
             var query = repo.BuildSearchQuery(parameters);
             var results = query.ToList();
             Assert.Single(results);
-            Assert.Equal("cat", results[0].Gloss);
+            Assert.Equal("cat", results[0].Gloss[0]);
         }
 
         [Fact]
@@ -82,9 +82,9 @@ namespace SignPuddle.API.Tests.Data.Repositories
             var context = GetDbContext();
             context.Signs.AddRange(new List<Sign>
             {
-                new Sign { PuddleSignId = 1, Gloss = "cat", DictionaryId = "1", Fsw = "M100x100S2" },
-                new Sign { PuddleSignId = 2, Gloss = "dog", DictionaryId = "1", Fsw = "M200x200S3" },
-                new Sign { PuddleSignId = 3, Gloss = "apple", DictionaryId = "2", Fsw = "M300x300S4" }
+                new Sign { PuddleSignId = 1, Gloss = new List<string> { "cat" }, DictionaryId = "1", Fsw = "M100x100S2" },
+                new Sign { PuddleSignId = 2, Gloss = new List<string> { "dog" }, DictionaryId = "1", Fsw = "M200x200S3" },
+                new Sign { PuddleSignId = 3, Gloss = new List<string> { "apple" }, DictionaryId = "2", Fsw = "M300x300S4" }
             });
             context.SaveChanges();
             var repo = new SignRepository(context);
@@ -92,7 +92,7 @@ namespace SignPuddle.API.Tests.Data.Repositories
             var query = repo.BuildSearchQuery(parameters);
             var results = await repo.ExecuteSearchQueryAsync(query, page: 2, pageSize: 2);
             Assert.Single(results);
-            Assert.Equal("apple", results[0].Gloss);
+            Assert.Equal("apple", results[0].Gloss[0]);
         }
 
         [Fact]
@@ -110,10 +110,10 @@ namespace SignPuddle.API.Tests.Data.Repositories
         [Fact]
         public void MapToDto_Sign_Works()
         {
-            var entity = new Sign { PuddleSignId = 5, Gloss = "cat", DictionaryId = "1", Fsw = "M100x100S2" };
+            var entity = new Sign { PuddleSignId = 5, Gloss = new List<string> { "cat" }, DictionaryId = "1", Fsw = "M100x100S2" };
             var dto = SignRepository.MapToDto(entity);
             Assert.Equal(5, dto.PuddleSignId);
-            Assert.Equal("cat", dto.Gloss);
+            Assert.Equal("cat", dto.Gloss[0]);
             Assert.Equal("1", dto.DictionaryId);
             Assert.Equal("M100x100S2", dto.Fsw);
         }
@@ -165,9 +165,9 @@ namespace SignPuddle.API.Tests.Data.Repositories
             var context = GetDbContext();
             context.Signs.AddRange(new List<Sign>
             {
-                new Sign { PuddleSignId = 1, Gloss = "cat", DictionaryId = "1", Fsw = "M100x100S2" },
-                new Sign { PuddleSignId = 2, Gloss = "dog", DictionaryId = "1", Fsw = "M200x200S3" },
-                new Sign { PuddleSignId = 3, Gloss = "apple", DictionaryId = "2", Fsw = "M300x300S4" }
+                new Sign { PuddleSignId = 1, Gloss = new List<string> { "cat" }, DictionaryId = "1", Fsw = "M100x100S2" },
+                new Sign { PuddleSignId = 2, Gloss = new List<string> { "dog" }, DictionaryId = "1", Fsw = "M200x200S3" },
+                new Sign { PuddleSignId = 3, Gloss = new List<string> { "apple" }, DictionaryId = "2", Fsw = "M300x300S4" }
             });
             context.SaveChanges();
             var repo = new SignRepository(context);
