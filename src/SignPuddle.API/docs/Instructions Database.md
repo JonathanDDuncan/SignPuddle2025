@@ -372,7 +372,6 @@ The SignPuddle 2.0 database modernization project focuses on migrating from lega
 - **Dictionary**: SignWriting dictionary/puddle management  
 - **Sign**: Individual sign storage with FSW notation
 - **Symbol**: (rendered dynamically via RenderService; no database persistence)
-- **SpmlDocument**: Legacy SPML document storage in CosmosDB
 
 # Implementation Guide
 

@@ -102,13 +102,11 @@ builder.Services.AddScoped<IFormatService, FormatService>();
 builder.Services.AddScoped<IRenderService, RenderService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISpmlImportService, SpmlImportService>();
-builder.Services.AddScoped<ISpmlPersistenceService, SpmlPersistenceService>();
 
 // Register repositories
 builder.Services.AddScoped<ISignRepository, SignRepository>();
 builder.Services.AddScoped<IDictionaryRepository, DictionaryRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ISpmlRepository, SpmlRepository>();
 
 // Add CORS policy for Svelte frontend
 builder.Services.AddCors(options =>

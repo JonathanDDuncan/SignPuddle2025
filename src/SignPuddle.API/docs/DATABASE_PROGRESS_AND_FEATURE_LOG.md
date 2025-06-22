@@ -98,40 +98,6 @@ This document provides a comprehensive overview of the database implementation p
 - **CRUD Operations**: ✅ Complete
 - **Search Capabilities**: ✅ Search by gloss, FSW, dictionary
 
-#### 4. **Symbol Entity** (`Symbol.cs`)
-**Status**: ✅ Fully Implemented
-- **Purpose**: SignWriting symbol metadata and rendering
-- **Key Properties**:
-  - `Key` (string, primary key) - ISWA symbol key
-  - `Category` (string)
-  - `Group` (string)
-  - `Base` (string)
-  - `Fill` (int)
-  - `Rotation` (int)
-  - `Name` (string)
-  - `SvgPath` (string)
-- **Repository**: `SymbolRepository.cs` with `ISymbolRepository` interface
-- **CRUD Operations**: ✅ Complete
-- **Integration**: ✅ Connected to SignWriting format services
-
-#### 5. **SPML Document Entity** (`SpmlDocumentEntity.cs`)
-**Status**: ✅ Fully Implemented
-- **Purpose**: Legacy SPML import/export and document storage
-- **Key Properties**:
-  - `Id` (string, primary key)
-  - `PartitionKey` (string) - CosmosDB partition key
-  - `DocumentType` (string) - Fixed to "spml"
-  - `SpmlDocument` (owned entity) - Embedded SPML data
-  - `OriginalXml` (string) - Original XML content
-  - `OwnerId` (string)
-  - `Description` (string)
-  - `Tags` (string collection)
-  - `MetadataJson` (string) - Serialized metadata
-  - `SavedAt`/`UpdatedAt` (DateTime)
-- **Repository**: `SpmlRepository.cs` with `ISpmlRepository` interface
-- **CRUD Operations**: ✅ Complete with advanced querying
-- **Special Features**: ✅ XML export, statistics, owner filtering
-
 ## Repository Pattern Implementation
 
 ### ✅ **COMPLETED REPOSITORIES** (100%)
@@ -182,18 +148,6 @@ This document provides a comprehensive overview of the database implementation p
 
 #### 5. **SPML Repository** (`SpmlRepository.cs`)
 **Interface**: `ISpmlRepository.cs`
-**Methods Implemented**:
-- ✅ `SaveSpmlDocumentAsync(SpmlDocumentEntity)` - Save SPML document
-- ✅ `SaveAsync(SpmlDocumentEntity)` - Alternative save method
-- ✅ `GetSpmlDocumentByIdAsync(string id)` - Get document by ID
-- ✅ `GetAllSpmlDocumentsAsync()` - Get all documents
-- ✅ `GetSpmlDocumentsByTypeAsync(string type)` - Get by type
-- ✅ `GetSpmlDocumentsByPuddleIdAsync(int puddleId)` - Get by puddle ID
-- ✅ `GetSpmlDocumentsByOwnerAsync(string ownerId)` - Get by owner
-- ✅ `UpdateSpmlDocumentAsync(SpmlDocumentEntity)` - Update document
-- ✅ `DeleteSpmlDocumentAsync(string id)` - Delete document
-- ✅ `ExportSpmlDocumentAsXmlAsync(string id)` - Export to XML
-- ✅ `GetSpmlDocumentStatsAsync()` - Get repository statistics
 
 ## Database Configuration
 
@@ -208,25 +162,15 @@ public class ApplicationDbContext : DbContext
     public DbSet<Symbol> Symbols { get; set; }
     public DbSet<Dictionary> Dictionaries { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<SpmlDocumentEntity> SpmlDocuments { get; set; }
 }
 ```
 
 #### Model Configuration
 - ✅ **Sign Entity**: Configured with foreign key relationships
-- ✅ **SpmlDocumentEntity**: Configured for CosmosDB with partition key
-- ✅ **Owned Entities**: SpmlDocument configured as owned entity
 - ✅ **Indexes**: Added for common query patterns
 - ✅ **Relationships**: Proper foreign key relationships established
 
 #### CosmosDB Configuration
-```csharp
-// SPML documents configured for CosmosDB
-modelBuilder.Entity<SpmlDocumentEntity>()
-    .ToContainer("SpmlDocuments")
-    .HasPartitionKey(e => e.PartitionKey)
-    .HasNoDiscriminator();
-```
 
 ## Project Structure and Organization
 
